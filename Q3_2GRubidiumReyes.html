@@ -1,0 +1,100 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Club / Organization Application</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:20px}
+    form{max-width:700px}
+    fieldset{margin-bottom:12px;padding:12px}
+    label{display:block;margin:8px 0}
+    input,select,textarea{width:100%;box-sizing:border-box;padding:6px;border:1px solid #888}
+    input:focus,select:focus,textarea:focus{outline:2px solid #333}
+    .missing{border:2px solid #c00}
+    .inline{display:inline-block;margin-right:12px;width:auto}
+    .actions{margin-top:10px}
+  </style>
+</head>
+<body>
+  <form id="appForm" method="post" action="submit">
+    <fieldset>
+      <legend>Information 1-4</legend>
+
+      <label>Student ID
+        <input type="number" name="studentId" id="studentId" required>
+      </label>
+
+      <label>Full Name
+        <input type="text" name="fullName" id="fullName" required onblur="markIfBlank(this)">
+      </label>
+
+      <label>Birthday
+        <input type="date" name="birthday" id="birthday" required>
+      </label>
+
+      <label>Email Address
+        <input type="email" name="email" id="email" required>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Information 5-8</legend>
+
+      <label>Mobile Phone
+        <input type="text" name="mobile" id="mobile" required onblur="markIfBlank(this)">
+      </label>
+
+      <label>Grade Level
+        <select name="gradeLevel" id="gradeLevel" required>
+          <option value="" disabled selected>Select</option>
+          <option value="G07">Grade 7</option>
+          <option value="G08">Grade 8</option>
+          <option value="G09">Grade 9</option>
+          <option value="G10">Grade 10</option>
+          <option value="G11">Grade 11</option>
+          <option value="G12">Grade 12</option>
+        </select>
+      </label>
+
+      <label>Intern / Extern</label>
+      <label class="inline"><input type="radio" name="roleType" value="INT" required> Intern</label>
+      <label class="inline"><input type="radio" name="roleType" value="EXT" required> Extern</label>
+
+      <label>Preferred Organization / Club
+        <select name="club" id="club" required>
+          <option value="" disabled selected>Select</option>
+          <option value="CLB_STEM">STEM Society</option>
+          <option value="CLB_ARTS">Arts Guild</option>
+          <option value="CLB_DEB">Debate Club</option>
+          <option value="CLB_VOL">Volunteer Corps</option>
+          <option value="CLB_CODE">Coding Circle</option>
+        </select>
+      </label>
+    </fieldset>
+
+    <label>Why do you want to join
+      <textarea name="reason" id="reason" required onblur="markIfBlank(this)"></textarea>
+    </label>
+
+    <div class="actions">
+      <button type="submit">Submit</button>
+      <button type="reset">Reset</button>
+    </div>
+  </form>
+
+  <script>
+    const form=document.getElementById("appForm");
+    form.onsubmit=function(){return confirm("Submit this application?")};
+    form.onreset=function(){const ok=confirm("Reset the form and clear all inputs?");if(ok){setTimeout(()=>{document.querySelectorAll(".missing").forEach(e=>e.classList.remove("missing"))},0)}return ok};
+
+    function markIfBlank(el){
+      const blank=!el.value||el.value.trim()==="";
+      if(blank) el.classList.add("missing");
+      else el.classList.remove("missing");
+    }
+  </script>
+</body>
+</html>
+```
