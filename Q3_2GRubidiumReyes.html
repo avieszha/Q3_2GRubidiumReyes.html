@@ -1,54 +1,75 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Club / Organization Application</title>
+
   <style>
     body{font-family:Arial,sans-serif;margin:20px}
     form{max-width:700px}
     fieldset{margin-bottom:12px;padding:12px}
     label{display:block;margin:8px 0}
-    input,select,textarea{width:100%;box-sizing:border-box;padding:6px;border:1px solid #888}
-    input:focus,select:focus,textarea:focus{outline:2px solid #333}
-    .missing{border:2px solid #c00}
-    .inline{display:inline-block;margin-right:12px;width:auto}
+    input,select,textarea{
+      width:100%;
+      box-sizing:border-box;
+      padding:6px;
+      border:1px solid #888
+    }
+    input:focus,select:focus,textarea:focus{
+      outline:2px solid #333
+    }
+    .missing{
+      border:2px solid #c00;
+      background:#ffecec;
+    }
+    .inline{
+      display:inline-block;
+      margin-right:12px;
+      width:auto
+    }
     .actions{margin-top:10px}
+    small{color:#555;font-size:0.85em}
   </style>
 </head>
+
 <body>
   <form id="appForm" method="post" action="submit">
+
     <fieldset>
-      <legend>Information 1-4</legend>
+      <legend>Information 1–4</legend>
 
       <label>Student ID
-        <input type="number" name="studentId" id="studentId" required>
+        <input type="number" name="studentId" required
+               placeholder="e.g. 202501234">
       </label>
 
       <label>Full Name
-        <input type="text" name="fullName" id="fullName" required onblur="markIfBlank(this)">
+        <input type="text" name="fullName" required
+               placeholder="e.g. Juan Dela Cruz">
       </label>
 
       <label>Birthday
-        <input type="date" name="birthday" id="birthday" required>
+        <input type="date" name="birthday" required>
       </label>
 
       <label>Email Address
-        <input type="email" name="email" id="email" required>
+        <input type="email" name="email" required
+               placeholder="e.g. juan.delacruz@email.com">
       </label>
     </fieldset>
 
     <fieldset>
-      <legend>Information 5-8</legend>
+      <legend>Information 5–8</legend>
 
       <label>Mobile Phone
-        <input type="text" name="mobile" id="mobile" required onblur="markIfBlank(this)">
+        <input type="text" name="mobile" required
+               placeholder="e.g. 0917XXXXXXX">
       </label>
 
       <label>Grade Level
-        <select name="gradeLevel" id="gradeLevel" required>
-          <option value="" disabled selected>Select</option>
+        <select name="gradeLevel" required>
+          <option value="">— Select Grade Level —</option>
           <option value="G07">Grade 7</option>
           <option value="G08">Grade 8</option>
           <option value="G09">Grade 9</option>
@@ -59,12 +80,16 @@
       </label>
 
       <label>Intern / Extern</label>
-      <label class="inline"><input type="radio" name="roleType" value="INT" required> Intern</label>
-      <label class="inline"><input type="radio" name="roleType" value="EXT" required> Extern</label>
+      <label class="inline">
+        <input type="radio" name="roleType" value="INT" required> Intern
+      </label>
+      <label class="inline">
+        <input type="radio" name="roleType" value="EXT" required> Extern
+      </label>
 
       <label>Preferred Organization / Club
-        <select name="club" id="club" required>
-          <option value="" disabled selected>Select</option>
+        <select name="club" required>
+          <option value="">— Select a Club —</option>
           <option value="CLB_STEM">STEM Society</option>
           <option value="CLB_ARTS">Arts Guild</option>
           <option value="CLB_DEB">Debate Club</option>
@@ -75,7 +100,9 @@
     </fieldset>
 
     <label>Why do you want to join
-      <textarea name="reason" id="reason" required onblur="markIfBlank(this)"></textarea>
+      <textarea name="reason" required
+        placeholder="e.g. I want to join because I enjoy working with others and contributing my skills to meaningful projects."></textarea>
+      <small>Please write at least one complete sentence.</small>
     </label>
 
     <div class="actions">
@@ -85,15 +112,49 @@
   </form>
 
   <script>
-    const form=document.getElementById("appForm");
-    form.onsubmit=function(){return confirm("Submit this application?")};
-    form.onreset=function(){const ok=confirm("Reset the form and clear all inputs?");if(ok){setTimeout(()=>{document.querySelectorAll(".missing").forEach(e=>e.classList.remove("missing"))},0)}return ok};
+    const form = document.getElementById("appForm");
 
-    function markIfBlank(el){
-      const blank=!el.value||el.value.trim()==="";
-      if(blank) el.classList.add("missing");
-      else el.classList.remove("missing");
-    }
+    form.addEventListener("submit", function (e) {
+      let valid = true;
+
+      const requiredFields = form.querySelectorAll("[required]");
+
+      requiredFields.forEach(field => {
+        let isEmpty = false;
+
+        if (field.type === "radio") {
+          const group = form.querySelectorAll(`input[name="${field.name}"]`);
+          isEmpty = ![...group].some(r => r.checked);
+          group.forEach(r => r.classList.toggle("missing", isEmpty));
+        } 
+        else {
+          isEmpty = !field.value || field.value.trim() === "";
+          field.classList.toggle("missing", isEmpty);
+        }
+
+        if (isEmpty) valid = false;
+      });
+
+      if (!valid) {
+        e.preventDefault();
+        alert("Please complete all required fields before submitting.");
+      } else {
+        if (!confirm("Submit this application?")) {
+          e.preventDefault();
+        }
+      }
+    });
+
+    form.addEventListener("reset", function (e) {
+      if (!confirm("Reset the form and clear all inputs?")) {
+        e.preventDefault();
+      } else {
+        setTimeout(() => {
+          document.querySelectorAll(".missing")
+            .forEach(el => el.classList.remove("missing"));
+        }, 0);
+      }
+    });
   </script>
 </body>
 </html>
