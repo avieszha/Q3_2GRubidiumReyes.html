@@ -1,160 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Club / Organization Application</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Club / Organization Application</title>
 
-  <style>
-    body{font-family:Arial,sans-serif;margin:20px}
-    form{max-width:700px}
-    fieldset{margin-bottom:12px;padding:12px}
-    label{display:block;margin:8px 0}
-    input,select,textarea{
-      width:100%;
-      box-sizing:border-box;
-      padding:6px;
-      border:1px solid #888
-    }
-    input:focus,select:focus,textarea:focus{
-      outline:2px solid #333
-    }
-    .missing{
-      border:2px solid #c00;
-      background:#ffecec;
-    }
-    .inline{
-      display:inline-block;
-      margin-right:12px;
-      width:auto
-    }
-    .actions{margin-top:10px}
-    small{color:#555;font-size:0.85em}
-  </style>
+<style>
+  body{
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#eef2ff,#fdf2f8);
+    padding:30px;
+  }
+
+  form{
+    max-width:720px;
+    margin:auto;
+    background:#ffffff;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(76,87,255,0.12);
+    border-top:6px solid #6366f1;
+  }
+
+  h2{
+    text-align:center;
+    margin-bottom:12px;
+    color:#3730a3;
+  }
+
+  fieldset{
+    border:1px solid #e5e7eb;
+    margin-bottom:16px;
+    padding:16px;
+    border-radius:8px;
+    background:#fafafa;
+  }
+
+  legend{
+    font-weight:bold;
+    padding:0 8px;
+    color:#4338ca;
+  }
+
+  label{
+    display:block;
+    margin:12px 0;
+    color:#374151;
+  }
+
+  input, select, textarea{
+    width:100%;
+    padding:9px;
+    border:1.5px solid #c7c9ff;
+    border-radius:6px;
+    box-sizing:border-box;
+    background:#ffffff;
+  }
+
+  input::placeholder,
+  textarea::placeholder{
+    color:#9ca3af;
+  }
+
+  input:focus, select:focus, textarea:focus{
+    outline:none;
+    border-color:#6366f1;
+    box-shadow:0 0 0 2px rgba(99,102,241,0.2);
+  }
+
+  textarea{resize:vertical}
+
+  .inline{
+    display:inline-block;
+    margin-right:18px;
+    width:auto;
+    color:#1f2937;
+  }
+
+  .missing{
+    border:2px solid #dc2626;
+    background:#fff1f2;
+  }
+
+  .error-box{
+    display:none;
+    background:#fee2e2;
+    color:#7f1d1d;
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:16px;
+    font-size:0.95em;
+    border-left:5px solid #dc2626;
+  }
+
+  .actions{
+    text-align:right;
+    margin-top:18px;
+  }
+
+  button{
+    padding:9px 16px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+  }
+
+  button[type="submit"]{
+    background:linear-gradient(135deg,#6366f1,#4f46e5);
+    color:white;
+  }
+
+  button[type="submit"]:hover{
+    background:linear-gradient(135deg,#4f46e5,#4338ca);
+  }
+
+  button[type="reset"]{
+    background:#e5e7eb;
+    color:#374151;
+    margin-left:8px;
+  }
+
+  button[type="reset"]:hover{
+    background:#d1d5db;
+  }
+</style>
 </head>
 
 <body>
-  <form id="appForm" method="post" action="submit">
 
-    <fieldset>
-      <legend>Information 1–4</legend>
+<form id="appForm" method="post" action="submit">
+  <h2>Club / Organization Application</h2>
 
-      <label>Student ID
-        <input type="number" name="studentId" required
-               placeholder="e.g. 202501234">
-      </label>
+  <div class="error-box" id="errorBox">
+    Please fill out all required fields highlighted in red.
+  </div>
 
-      <label>Full Name
-        <input type="text" name="fullName" required
-               placeholder="e.g. Juan Dela Cruz">
-      </label>
+  <fieldset>
+    <legend>Information 1–4</legend>
 
-      <label>Birthday
-        <input type="date" name="birthday" required>
-      </label>
-
-      <label>Email Address
-        <input type="email" name="email" required
-               placeholder="e.g. juan.delacruz@email.com">
-      </label>
-    </fieldset>
-
-    <fieldset>
-      <legend>Information 5–8</legend>
-
-      <label>Mobile Phone
-        <input type="text" name="mobile" required
-               placeholder="e.g. 0917XXXXXXX">
-      </label>
-
-      <label>Grade Level
-        <select name="gradeLevel" required>
-          <option value="">— Select Grade Level —</option>
-          <option value="G07">Grade 7</option>
-          <option value="G08">Grade 8</option>
-          <option value="G09">Grade 9</option>
-          <option value="G10">Grade 10</option>
-          <option value="G11">Grade 11</option>
-          <option value="G12">Grade 12</option>
-        </select>
-      </label>
-
-      <label>Intern / Extern</label>
-      <label class="inline">
-        <input type="radio" name="roleType" value="INT" required> Intern
-      </label>
-      <label class="inline">
-        <input type="radio" name="roleType" value="EXT" required> Extern
-      </label>
-
-      <label>Preferred Organization / Club
-        <select name="club" required>
-          <option value="">— Select a Club —</option>
-          <option value="CLB_STEM">STEM Society</option>
-          <option value="CLB_ARTS">Arts Guild</option>
-          <option value="CLB_DEB">Debate Club</option>
-          <option value="CLB_VOL">Volunteer Corps</option>
-          <option value="CLB_CODE">Coding Circle</option>
-        </select>
-      </label>
-    </fieldset>
-
-    <label>Why do you want to join
-      <textarea name="reason" required
-        placeholder="e.g. I want to join because I enjoy working with others and contributing my skills to meaningful projects."></textarea>
-      <small>Please write at least one complete sentence.</small>
+    <label>Student ID
+      <input type="number" name="studentId" required placeholder="e.g. 202501234">
     </label>
 
-    <div class="actions">
-      <button type="submit">Submit</button>
-      <button type="reset">Reset</button>
-    </div>
-  </form>
+    <label>Full Name
+      <input type="text" name="fullName" required placeholder="e.g. Juan Dela Cruz">
+    </label>
 
-  <script>
-    const form = document.getElementById("appForm");
+    <label>Birthday
+      <input type="date" name="birthday" required>
+    </label>
 
-    form.addEventListener("submit", function (e) {
-      let valid = true;
+    <label>Email Address
+      <input type="email" name="email" required placeholder="e.g. juan@email.com">
+    </label>
+  </fieldset>
 
-      const requiredFields = form.querySelectorAll("[required]");
+  <fieldset>
+    <legend>Information 5–8</legend>
 
-      requiredFields.forEach(field => {
-        let isEmpty = false;
+    <label>Mobile Phone
+      <input type="text" name="mobile" required placeholder="e.g. 0917XXXXXXX">
+    </label>
 
-        if (field.type === "radio") {
-          const group = form.querySelectorAll(`input[name="${field.name}"]`);
-          isEmpty = ![...group].some(r => r.checked);
-          group.forEach(r => r.classList.toggle("missing", isEmpty));
-        } 
-        else {
-          isEmpty = !field.value || field.value.trim() === "";
-          field.classList.toggle("missing", isEmpty);
-        }
+    <label>Grade Level
+      <select name="gradeLevel" required>
+        <option value="">— Select Grade Level —</option>
+        <option value="G07">Grade 7</option>
+        <option value="G08">Grade 8</option>
+        <option value="G09">Grade 9</option>
+        <option value="G10">Grade 10</option>
+        <option value="G11">Grade 11</option>
+        <option value="G12">Grade 12</option>
+      </select>
+    </label>
 
-        if (isEmpty) valid = false;
-      });
+    <label>Intern / Extern</label>
+    <label class="inline"><input type="radio" name="roleType" value="INT" required> Intern</label>
+    <label class="inline"><input type="radio" name="roleType" value="EXT" required> Extern</label>
 
-      if (!valid) {
-        e.preventDefault();
-        alert("Please complete all required fields before submitting.");
-      } else {
-        if (!confirm("Submit this application?")) {
-          e.preventDefault();
-        }
-      }
-    });
+    <label>Preferred Organization / Club
+      <select name="club" required>
+        <option value="">— Select a Club —</option>
+        <option value="CLB_STEM">STEM Society</option>
+        <option value="CLB_ARTS">Arts Guild</option>
+        <option value="CLB_DEB">Debate Club</option>
+        <option value="CLB_VOL">Volunteer Corps</option>
+        <option value="CLB_CODE">Coding Circle</option>
+      </select>
+    </label>
+  </fieldset>
 
-    form.addEventListener("reset", function (e) {
-      if (!confirm("Reset the form and clear all inputs?")) {
-        e.preventDefault();
-      } else {
-        setTimeout(() => {
-          document.querySelectorAll(".missing")
-            .forEach(el => el.classList.remove("missing"));
-        }, 0);
-      }
-    });
-  </script>
+  <label>Why do you want to join
+    <textarea name="reason" required
+      placeholder="e.g. I want to join because I want to develop my skills and contribute to the organization."></textarea>
+  </label>
+
+  <div class="actions">
+    <button type="submit">Submit</button>
+    <button type="reset">Reset</button>
+  </div>
+</form>
+
+<script>
+const form = document.getElementById("appForm");
+const errorBox = document.getElementById("errorBox");
+
+form.addEventListener("submit", function(e){
+  let valid = true;
+  errorBox.style.display = "none";
+
+  document.querySelectorAll(".missing")
+    .forEach(el => el.classList.remove("missing"));
+
+  const required = form.querySelectorAll("[required]");
+
+  required.forEach(field => {
+    let empty = false;
+
+    if(field.type === "radio"){
+      const group = form.querySelectorAll(`input[name="${field.name}"]`);
+      empty = ![...group].some(r => r.checked);
+      group.forEach(r => r.classList.toggle("missing", empty));
+    } else {
+      empty = !field.value || field.value.trim() === "";
+      field.classList.toggle("missing", empty);
+    }
+
+    if(empty) valid = false;
+  });
+
+  if(!valid){
+    e.preventDefault();
+    errorBox.style.display = "block";
+  }
+});
+
+form.addEventListener("reset", function(){
+  errorBox.style.display = "none";
+  setTimeout(() => {
+    document.querySelectorAll(".missing")
+      .forEach(el => el.classList.remove("missing"));
+  }, 0);
+});
+</script>
+
 </body>
 </html>
