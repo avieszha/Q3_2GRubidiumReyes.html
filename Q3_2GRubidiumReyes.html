@@ -93,9 +93,24 @@
     border-left:5px solid #dc2626;
   }
 
+  .success-box{
+    display:none;
+    background:#dcfce7;
+    color:#14532d;
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:16px;
+    font-size:0.95em;
+    border-left:5px solid #22c55e;
+  }
+
   .actions{
     text-align:right;
     margin-top:18px;
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    flex-wrap:wrap;
   }
 
   button{
@@ -118,22 +133,35 @@
   button[type="reset"]{
     background:#e5e7eb;
     color:#374151;
-    margin-left:8px;
   }
 
   button[type="reset"]:hover{
     background:#d1d5db;
+  }
+
+  /* ✅ New View button style */
+  #viewBtn{
+    background:#111827;
+    color:#fff;
+  }
+  #viewBtn:hover{
+    background:#0b1220;
   }
 </style>
 </head>
 
 <body>
 
-<form id="appForm" method="post" action="submit">
+<!-- ✅ action attribute removed -->
+<form id="appForm" method="post">
   <h2>Club / Organization Application</h2>
 
   <div class="error-box" id="errorBox">
     Please fill out all required fields highlighted in red.
+  </div>
+
+  <div class="success-box" id="successBox">
+    Saved successfully!
   </div>
 
   <fieldset>
@@ -198,6 +226,10 @@
 
   <div class="actions">
     <button type="submit">Submit</button>
+
+    <!-- ✅ required new button -->
+    <button type="button" id="viewBtn">View Signups</button>
+
     <button type="reset">Reset</button>
   </div>
 </form>
@@ -205,19 +237,29 @@
 <script>
 const form = document.getElementById("appForm");
 const errorBox = document.getElementById("errorBox");
+const successBox = document.getElementById("successBox");
+const viewBtn = document.getElementById("viewBtn");
+
+// ✅ Use ONE consistent key for both pages
+const STORAGE_KEY = "clubSignUps";
 
 form.addEventListener("submit", function(e){
+  e.preventDefault(); // ✅ keep page visible after submission
+
   let valid = true;
   errorBox.style.display = "none";
+  successBox.style.display = "none";
 
-  document.querySelectorAll(".missing")
-    .forEach(el => el.classList.remove("missing"));
+  // Remove previous red highlights
+  document.querySelectorAll(".missing").forEach(el => el.classList.remove("missing"));
 
+  // Collect required fields
   const required = form.querySelectorAll("[required]");
 
   required.forEach(field => {
     let empty = false;
 
+    // Special case: radio group must have one selected
     if(field.type === "radio"){
       const group = form.querySelectorAll(`input[name="${field.name}"]`);
       empty = ![...group].some(r => r.checked);
@@ -231,17 +273,66 @@ form.addEventListener("submit", function(e){
   });
 
   if(!valid){
-    e.preventDefault();
     errorBox.style.display = "block";
+    return;
   }
+
+  // ✅ Confirm submission (required by instructions)
+  const ok = confirm("Are you sure you want to submit this application?");
+  if(!ok) return;
+
+  // ✅ Build object from form values
+  const fd = new FormData(form);
+  const record = {
+    studentId: fd.get("studentId"),
+    fullName: fd.get("fullName"),
+    birthday: fd.get("birthday"),
+    email: fd.get("email"),
+    mobile: fd.get("mobile"),
+    gradeLevel: fd.get("gradeLevel"),
+    roleType: fd.get("roleType"),
+    club: fd.get("club"),
+    reason: fd.get("reason"),
+    createdAt: new Date().toISOString() // Useful for showing when saved
+  };
+
+  // ✅ Check existing localStorage first, then grow content
+  let signUps = [];
+  const raw = localStorage.getItem(STORAGE_KEY);
+
+  if(raw){
+    try{
+      const parsed = JSON.parse(raw);
+      // Defensive: ensure we only append to an array
+      signUps = Array.isArray(parsed) ? parsed : [];
+    }catch(err){
+      // If JSON was corrupted, start fresh
+      signUps = [];
+    }
+  }
+
+  signUps.push(record);
+
+  // ✅ Save as a STRING containing list of objects
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(signUps));
+
+  // Success message + reset
+  successBox.textContent = `Saved successfully! Total sign-ups: ${signUps.length}`;
+  successBox.style.display = "block";
+  form.reset();
 });
 
 form.addEventListener("reset", function(){
   errorBox.style.display = "none";
+  successBox.style.display = "none";
   setTimeout(() => {
-    document.querySelectorAll(".missing")
-      .forEach(el => el.classList.remove("missing"));
+    document.querySelectorAll(".missing").forEach(el => el.classList.remove("missing"));
   }, 0);
+});
+
+// ✅ required: load viewSignUps.html
+viewBtn.addEventListener("click", () => {
+  window.location.href = "viewSignUps.html";
 });
 </script>
 

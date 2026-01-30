@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>View Sign-ups</title>
+
+<style>
+  body{
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#eef2ff,#fdf2f8);
+    padding:30px;
+    margin:0;
+  }
+
+  .card{
+    max-width:1050px;
+    margin:auto;
+    background:#fff;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(76,87,255,0.12);
+    border-top:6px solid #6366f1;
+  }
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  h2{
+    margin:0;
+    color:#3730a3;
+  }
+
+  .top-actions a{
+    text-decoration:none;
+    background:#111827;
+    color:#fff;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:700;
+    display:inline-block;
+  }
+  .top-actions a:hover{ background:#0b1220; }
+
+  .controls{
+    margin:16px 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:12px;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    background:#fafafa;
+  }
+
+  select{
+    padding:10px;
+    border:1.5px solid #c7c9ff;
+    border-radius:10px;
+    background:#fff;
+    min-width:240px;
+  }
+
+  .total{
+    font-weight:800;
+    background:#eef2ff;
+    border:1px solid #c7c9ff;
+    padding:10px 12px;
+    border-radius:10px;
+  }
+
+  .message{
+    display:none;
+    margin:12px 0;
+    padding:12px;
+    border-radius:10px;
+    background:#fffbeb;
+    border-left:6px solid #f59e0b;
+    color:#7c2d12;
+    font-weight:700;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    overflow:hidden;
+  }
+
+  thead{
+    background:linear-gradient(135deg,#6366f1,#4f46e5);
+    color:#fff;
+  }
+
+  th, td{
+    text-align:left;
+    padding:12px 10px;
+    border-bottom:1px solid #e5e7eb;
+    vertical-align:top;
+    font-size:0.95em;
+  }
+
+  tbody tr:nth-child(even){ background:#fafafa; }
+  .small{ color:#6b7280; font-size:0.9em; }
+
+  .pill{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    background:#e0e7ff;
+    border:1px solid #c7c9ff;
+    font-weight:800;
+    font-size:0.85em;
+  }
+</style>
+</head>
+
+<body>
+  <div class="card">
+    <header>
+      <div>
+        <h2>Sign-ups List</h2>
+        <div class="small">Shows all saved sign-ups from localStorage. Use the filter to view per club.</div>
+      </div>
+
+      <div class="top-actions">
+        <!-- ✅ IMPORTANT: make sure this matches your signup file name -->
+        <a href="Q3_2GRubidiumReyes.html">← Back to Sign-up Page</a>
+      </div>
+    </header>
+
+    <div class="controls">
+      <div>
+        <div class="small"><b>Filter by Club</b></div>
+        <select id="clubFilter"></select>
+      </div>
+
+      <div class="total" id="totalBox">Total Sign-ups: 0</div>
+    </div>
+
+    <div class="message" id="messageBox"></div>
+
+    <table id="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Student</th>
+          <th>Contact</th>
+          <th>Details</th>
+          <th>Club</th>
+          <th>Reason</th>
+          <th>Date Saved</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+<script>
+  const STORAGE_KEY = "clubSignUps";
+
+  // Club name helper (your form uses these codes)
+  const CLUB_NAMES = {
+    CLB_STEM: "STEM Society",
+    CLB_ARTS: "Arts Guild",
+    CLB_DEB:  "Debate Club",
+    CLB_VOL:  "Volunteer Corps",
+    CLB_CODE: "Coding Circle"
+  };
+
+  const clubFilter = document.getElementById("clubFilter");
+  const totalBox = document.getElementById("totalBox");
+  const messageBox = document.getElementById("messageBox");
+  const tbody = document.getElementById("tbody");
+  const table = document.getElementById("table");
+
+  // ✅ Read localStorage safely (prevents errors if JSON is broken)
+  function loadSignUps(){
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return []; // nothing saved
+
+    try{
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    }catch(err){
+      return [];
+    }
+  }
+
+  function setMessage(text){
+    messageBox.textContent = text;
+    messageBox.style.display = "block";
+  }
+
+  function clearMessage(){
+    messageBox.style.display = "none";
+  }
+
+  function setTotal(n){
+    totalBox.textContent = "Total Sign-ups: " + n;
+  }
+
+  // ✅ Build dropdown: ALL + each club option from your form
+  function buildDropdown(){
+    clubFilter.innerHTML = "";
+
+    const optAll = document.createElement("option");
+    optAll.value = "ALL";
+    optAll.textContent = "ALL";
+    clubFilter.appendChild(optAll);
+
+    // Add all known clubs (even if no signups yet — makes filtering consistent)
+    Object.keys(CLUB_NAMES).forEach(code => {
+      const opt = document.createElement("option");
+      opt.value = code;
+      opt.textContent = CLUB_NAMES[code];
+      clubFilter.appendChild(opt);
+    });
+
+    clubFilter.value = "ALL";
+  }
+
+  // ✅ Render table rows for a given list
+  function render(list, selected){
+    tbody.innerHTML = "";
+
+    // No data at all
+    if(selected === "ALL" && list.length === 0){
+      table.style.display = "none";
+      setTotal(0);
+      setMessage("No sign-ups saved yet. Please go back and submit at least one sign-up.");
+      return;
+    }
+
+    // Selected club has no signups
+    if(selected !== "ALL" && list.length === 0){
+      table.style.display = "none";
+      setTotal(0);
+      setMessage("No sign-ups found for the selected club.");
+      return;
+    }
+
+    // Otherwise show table
+    table.style.display = "table";
+    clearMessage();
+    setTotal(list.length);
+
+    list.forEach((s, i) => {
+      const tr = document.createElement("tr");
+
+      // Helpful formatting: show local date/time from ISO string
+      const savedDate = s.createdAt ? new Date(s.createdAt).toLocaleString() : "(unknown)";
+
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>
+          <b>${s.fullName}</b><br>
+          <span class="small">ID: ${s.studentId}</span>
+        </td>
+        <td>
+          ${s.email}<br>
+          <span class="small">${s.mobile}</span>
+        </td>
+        <td>
+          <span class="pill">${s.gradeLevel}</span><br>
+          <span class="small">${s.roleType === "INT" ? "Intern" : "Extern"}</span>
+        </td>
+        <td>
+          <b>${CLUB_NAMES[s.club] || s.club}</b><br>
+          <span class="small">${s.club}</span>
+        </td>
+        <td>${s.reason}</td>
+        <td class="small">${savedDate}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ✅ Apply filtering rules
+  function applyFilter(allSignUps){
+    const selected = clubFilter.value;
+
+    if(selected === "ALL"){
+      render(allSignUps, "ALL");
+      return;
+    }
+
+    const filtered = allSignUps.filter(s => s.club === selected);
+    render(filtered, selected);
+  }
+
+  // ---- Initialize page (initial display must be ALL) ----
+  const allSignUps = loadSignUps();
+  buildDropdown();
+  render(allSignUps, "ALL");
+
+  // When user selects a club, filter table + update total
+  clubFilter.addEventListener("change", () => applyFilter(allSignUps));
+</script>
+
+</body>
+</html>
