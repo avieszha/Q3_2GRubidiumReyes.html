@@ -227,7 +227,6 @@
   <div class="actions">
     <button type="submit">Submit</button>
 
-    <!-- ✅ required new button -->
     <button type="button" id="viewBtn">View Signups</button>
 
     <button type="reset">Reset</button>
@@ -240,26 +239,22 @@ const errorBox = document.getElementById("errorBox");
 const successBox = document.getElementById("successBox");
 const viewBtn = document.getElementById("viewBtn");
 
-// ✅ Use ONE consistent key for both pages
 const STORAGE_KEY = "clubSignUps";
 
 form.addEventListener("submit", function(e){
-  e.preventDefault(); // ✅ keep page visible after submission
+  e.preventDefault();
 
   let valid = true;
   errorBox.style.display = "none";
   successBox.style.display = "none";
 
-  // Remove previous red highlights
   document.querySelectorAll(".missing").forEach(el => el.classList.remove("missing"));
 
-  // Collect required fields
   const required = form.querySelectorAll("[required]");
 
   required.forEach(field => {
     let empty = false;
 
-    // Special case: radio group must have one selected
     if(field.type === "radio"){
       const group = form.querySelectorAll(`input[name="${field.name}"]`);
       empty = ![...group].some(r => r.checked);
@@ -277,11 +272,9 @@ form.addEventListener("submit", function(e){
     return;
   }
 
-  // ✅ Confirm submission (required by instructions)
   const ok = confirm("Are you sure you want to submit this application?");
   if(!ok) return;
 
-  // ✅ Build object from form values
   const fd = new FormData(form);
   const record = {
     studentId: fd.get("studentId"),
@@ -293,30 +286,25 @@ form.addEventListener("submit", function(e){
     roleType: fd.get("roleType"),
     club: fd.get("club"),
     reason: fd.get("reason"),
-    createdAt: new Date().toISOString() // Useful for showing when saved
+    createdAt: new Date().toISOString() 
   };
 
-  // ✅ Check existing localStorage first, then grow content
   let signUps = [];
   const raw = localStorage.getItem(STORAGE_KEY);
 
   if(raw){
     try{
       const parsed = JSON.parse(raw);
-      // Defensive: ensure we only append to an array
       signUps = Array.isArray(parsed) ? parsed : [];
     }catch(err){
-      // If JSON was corrupted, start fresh
       signUps = [];
     }
   }
 
   signUps.push(record);
 
-  // ✅ Save as a STRING containing list of objects
   localStorage.setItem(STORAGE_KEY, JSON.stringify(signUps));
 
-  // Success message + reset
   successBox.textContent = `Saved successfully! Total sign-ups: ${signUps.length}`;
   successBox.style.display = "block";
   form.reset();
@@ -330,7 +318,6 @@ form.addEventListener("reset", function(){
   }, 0);
 });
 
-// ✅ required: load viewSignUps.html
 viewBtn.addEventListener("click", () => {
   window.location.href = "viewSignUps.html";
 });
