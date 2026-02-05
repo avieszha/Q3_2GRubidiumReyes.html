@@ -14,7 +14,6 @@
       --pink2:#ff8fb3;
       --shadow: 0 18px 45px rgba(30, 0, 40, .12);
     }
-
     *{ box-sizing:border-box; }
     body{
       margin:0;
@@ -40,6 +39,7 @@
       opacity:.45;
       animation: floatUp linear infinite;
       filter: blur(.2px);
+      z-index:0;
     }
     .heart::before, .heart::after{
       content:"";
@@ -68,6 +68,8 @@
       border-radius:28px;
       box-shadow: var(--shadow);
       padding:28px 26px 24px;
+      position:relative;
+      z-index:2;
     }
 
     .badge{
@@ -126,6 +128,8 @@
       justify-content:center;
       margin-top:18px;
       flex-wrap:wrap;
+      position:relative;
+      z-index:3;
     }
 
     button{
@@ -137,6 +141,7 @@
       letter-spacing:.4px;
       transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
       user-select:none;
+      will-change: transform;
     }
     button:active{ transform: translateY(1px) scale(.99); }
 
@@ -196,14 +201,13 @@
   </style>
 </head>
 <body>
-  <!-- hearts will be injected here -->
   <div class="wrap">
-    <div class="card" id="card">
+    <div class="card">
       <div class="badge"><span class="dot"></span> Valentine’s Letter 💌</div>
 
       <div id="main">
         <h1>Would you want to be my Valentine?</h1>
-        <p class="subtitle">Choose wisely… my heart is fragile (but also very dramatic).</p>
+        <p class="subtitle">Choose wisely… my heart is fragile (and very petty).</p>
 
         <div class="letter">
           <p>
@@ -217,8 +221,8 @@ Will you be my Valentine? 💗
         </div>
 
         <div class="actions">
-          <button id="yesBtn" aria-label="Yes">YES 💖</button>
-          <button id="noBtn" aria-label="No">NO 🙃</button>
+          <button id="yesBtn">YES 💖</button>
+          <button id="noBtn">NO 🙃</button>
         </div>
 
         <div class="hint" id="hint">P.S. The “NO” button is… suspicious.</div>
@@ -240,7 +244,7 @@ Will you be my Valentine? 💗
   <script>
     // --- floating hearts background ---
     (function makeHearts(){
-      const count = 18;
+      const count = 20;
       for(let i=0;i<count;i++){
         const h = document.createElement('div');
         h.className = 'heart';
@@ -264,68 +268,110 @@ Will you be my Valentine? 💗
     let noClicks = 0;
     let yesScale = 1;
 
+    // More dramatic messages
     const noPhrases = [
       "NO 🙃",
       "wait… NO? 😳",
       "r u sure?? 🤨",
-      "like… REALLY sure? 😭",
-      "bestie pls 😔",
-      "ok but I’ll cry 🥺",
-      "last chance 😤",
-      "fine… but yes is right there 👀"
+      "PLEASE 😭",
+      "what if I say pretty please 🥺",
+      "what if I bring chocolates 🍫",
+      "what if I do a backflip 🤸",
+      "what if I cry rn 😔",
+      "bestie… don't do this 😭",
+      "Enzo pls I’m literally begging 🧎‍♀️",
+      "I will write you a love poem 📜",
+      "I will bark (respectfully) 🐶",
+      "I will give you my last fry 🍟",
+      "I will be sad forever 🥲",
+      "NOT THE NO BUTTON AGAIN 😭",
+      "OKAY STOPPP 😭💔",
+      "think about the vibes ✨",
+      "just press YES already 😤",
+      "NO is illegal actually 🚔",
+      "this is emotional damage 🩹",
+      "I’m on my knees fr 🧎",
+      "LAST CHANCE… (not really) 😶",
+      "the YES is right there 👀"
     ];
 
     function setNoText(){
-      const idx = Math.min(noClicks, noPhrases.length - 1);
-      noBtn.textContent = noPhrases[idx];
+      if(noClicks < noPhrases.length){
+        noBtn.textContent = noPhrases[noClicks];
+        return;
+      }
+      // After we run out, generate endless variations
+      const extra = "PLEASE".repeat(2 + Math.min(8, Math.floor(noClicks/2)));
+      const faces = ["😭","🥺","😤","😫","💔","🧎‍♀️","😵‍💫","🙇‍♀️","😩"];
+      const face = faces[noClicks % faces.length];
+      noBtn.textContent = `${extra} ${face}`;
     }
 
-    function pop(el){
+    function pop(el, scale){
       el.animate(
-        [{ transform: `scale(${yesScale})` }, { transform: `scale(${yesScale + 0.06})` }, { transform: `scale(${yesScale})` }],
-        { duration: 180, easing: 'ease-out' }
+        [
+          { transform: `scale(${scale})` },
+          { transform: `scale(${scale + 0.07})` },
+          { transform: `scale(${scale})` }
+        ],
+        { duration: 190, easing: 'ease-out' }
+      );
+    }
+
+    function shakeNo(intensity){
+      const d = 140 + intensity * 18;
+      const x = 4 + intensity * 1.2;
+      noBtn.animate(
+        [
+          { transform:`translateX(0px) rotate(0deg)` },
+          { transform:`translateX(${-x}px) rotate(-1deg)` },
+          { transform:`translateX(${x}px) rotate(1deg)` },
+          { transform:`translateX(0px) rotate(0deg)` }
+        ],
+        { duration: d, easing:'ease-in-out' }
       );
     }
 
     noBtn.addEventListener('click', () => {
       noClicks++;
 
-      // YES gets bigger and bigger
-      yesScale = Math.min(yesScale + 0.18, 2.8);
-      yesBtn.style.transform = `scale(${yesScale})`;
-      yesBtn.style.boxShadow = `0 18px 34px rgba(255, 47, 119, ${Math.min(0.22 + noClicks*0.06, 0.55)})`;
+      // Unlimited YES growth (no max)
+      // grows faster the more they refuse 😈
+      const growth = 0.18 + (noClicks * 0.02);
+      yesScale += growth;
 
-      // After 3 clicks start the "r u sure..." vibe
-      if(noClicks >= 3){
-        setNoText();
-        hint.textContent = "The universe is begging you to press YES. 💗";
-      } else {
-        setNoText();
+      yesBtn.style.transform = `scale(${yesScale})`;
+      yesBtn.style.boxShadow = `0 18px 34px rgba(255, 47, 119, ${Math.min(0.22 + noClicks*0.06, 0.85)})`;
+
+      setNoText();
+
+      if(noClicks < 3){
         hint.textContent = "Are you sureeee…? 🙃";
+      } else if(noClicks < 8){
+        hint.textContent = "The universe is begging you to press YES. 💗";
+      } else if(noClicks < 15){
+        hint.textContent = "At this point the YES button is basically destiny 😭";
+      } else {
+        hint.textContent = "Okay I’m not asking anymore. It’s YES. 😤💘";
       }
 
-      pop(yesBtn);
-
-      // Optional: make NO button wiggle a bit as it gets desperate
-      noBtn.animate(
-        [{ transform:'translateX(0px)' }, { transform:'translateX(-6px)' }, { transform:'translateX(6px)' }, { transform:'translateX(0px)' }],
-        { duration: 220, easing:'ease-in-out' }
-      );
+      pop(yesBtn, yesScale);
+      shakeNo(Math.min(12, noClicks));
     });
 
     yesBtn.addEventListener('click', () => {
       main.style.display = 'none';
       success.style.display = 'block';
 
-      // confetti-ish heart burst
-      for(let i=0;i<16;i++){
+      // heart burst
+      for(let i=0;i<18;i++){
         const h = document.createElement('div');
         h.className = 'heart';
         const size = 10 + Math.random()*18;
         h.style.width = size+'px';
         h.style.height = size+'px';
-        h.style.left = (40 + Math.random()*20) + 'vw';
-        h.style.animationDuration = (2.8 + Math.random()*1.8) + 's';
+        h.style.left = (38 + Math.random()*24) + 'vw';
+        h.style.animationDuration = (2.6 + Math.random()*2.0) + 's';
         h.style.opacity = (0.35 + Math.random()*0.35).toFixed(2);
         document.body.appendChild(h);
         setTimeout(()=>h.remove(), 4500);
