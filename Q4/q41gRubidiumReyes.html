@@ -419,7 +419,6 @@
   </div>
 
   <script>
-    // Stores the chosen star rating
     let selectedRating = 0;
 
     const movieForm = document.getElementById("movieForm");
@@ -433,7 +432,6 @@
     const movieCounter = document.getElementById("movieCounter");
     const clearFormBtn = document.getElementById("clearFormBtn");
 
-    // Highlight stars based on selected rating
     function updateStarDisplay(rating) {
       stars.forEach((star) => {
         const starValue = Number(star.dataset.value);
