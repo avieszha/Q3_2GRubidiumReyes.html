@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecting...</title>
+  <style>
+    :root{
+      --bg1:#fff0f6;
+      --bg2:#ffe3ec;
+      --card:#ffffffcc;
+      --ink:#3b1b2a;
+      --pink:#ff4d88;
+      --pink2:#ff8fb3;
+      --shadow: 0 18px 45px rgba(30, 0, 40, .12);
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:block;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 800px at 20% 10%, #ffffff 0%, transparent 55%),
+        radial-gradient(900px 600px at 90% 20%, #ffd6e7 0%, transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+      overflow-y:auto;
+    }
+
+    /* Floating hearts (OFF at start; turned on later) */
+    .hearts{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+      display:none; /* start hidden */
+    }
+    .hearts.on{ display:block; }
+    .heart{
+      position:absolute;
+      width:16px;
+      height:16px;
+      transform: rotate(45deg);
+      background: var(--pink2);
+      opacity:.35;
+      animation: floatUp linear infinite;
+      filter: blur(.2px);
+    }
+    .heart::before, .heart::after{
+      content:"";
+      position:absolute;
+      width:16px; height:16px;
+      background: inherit;
+      border-radius:50%;
+    }
+    .heart::before{ left:-8px; top:0; }
+    .heart::after{ left:0; top:-8px; }
+    @keyframes floatUp{
+      from{ transform: translateY(110vh) rotate(45deg); }
+      to{ transform: translateY(-20vh) rotate(45deg); }
+    }
+
+    .wrap{
+      width:min(720px, 92vw);
+      margin: min(7vh, 64px) auto 64px;
+      position:relative;
+      z-index:2;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid #ffffff;
+      backdrop-filter: blur(10px);
+      border-radius:28px;
+      box-shadow: var(--shadow);
+      padding:28px 26px 24px;
+      position:relative;
+      z-index:2;
+    }
+
+    .badge{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 14px;
+      border-radius:999px;
+      background: #fff;
+      border: 1px solid #ffd1e0;
+      box-shadow: 0 8px 18px rgba(255, 77, 136, .15);
+      font-weight:700;
+      letter-spacing:.2px;
+      width:fit-content;
+    }
+    .badge .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: var(--pink);
+      box-shadow: 0 0 0 6px rgba(255,77,136,.18);
+    }
+
+    h1{
+      margin:18px 0 10px;
+      font-size: clamp(26px, 3.6vw, 42px);
+      line-height:1.05;
+      letter-spacing:-.5px;
+    }
+    .subtitle{
+      margin:0 0 18px;
+      font-size: clamp(14px, 2vw, 16px);
+      opacity:.85;
+    }
+
+    .panel{
+      background:#fff;
+      border:1px dashed #ffb3cc;
+      border-radius:22px;
+      padding:18px 18px;
+      box-shadow: 0 10px 25px rgba(255, 77, 136, .10);
+    }
+    .panel p{
+      margin:0;
+      font-size: clamp(15px, 2vw, 17px);
+      line-height:1.55;
+      white-space:pre-line;
+    }
+
+    .dearest{
+      font-weight:800;
+      color:#a11a4b;
+    }
+
+    .actions{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:center;
+      margin-top:18px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:3;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      border-radius:999px;
+      padding:14px 22px;
+      font-weight:900;
+      letter-spacing:.4px;
+      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+      user-select:none;
+      will-change: transform;
+    }
+    button:active{ transform: translateY(1px) scale(.99); }
+
+    .primary{
+      background: linear-gradient(135deg, var(--pink), #ff2f77);
+      color:white;
+      box-shadow: 0 14px 28px rgba(255, 47, 119, .30);
+      font-size: 18px;
+      transform-origin:center;
+    }
+    .primary:hover{ filter: brightness(1.03); }
+
+    .secondary{
+      background: #fff;
+      color:#b01244;
+      border: 2px solid #ffc1d6;
+      box-shadow: 0 10px 18px rgba(176, 18, 68, .10);
+      font-size: 16px;
+    }
+    .secondary:hover{ transform: translateY(-1px); }
+
+    .hint{
+      text-align:center;
+      margin-top:12px;
+      font-size:13px;
+      opacity:.65;
+    }
+
+    .screen{ display:none; }
+    .screen.active{ display:block; }
+
+    .footer{
+      text-align:center;
+      margin-top:14px;
+      font-size:12px;
+      opacity:.55;
+    }
+
+    /* --- FAKE AD MODAL --- */
+    .adOverlay{
+      position:fixed;
+      inset:0;
+      background: rgba(10, 8, 12, .55);
+      backdrop-filter: blur(6px);
+      z-index:999;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .adOverlay.show{ display:flex; }
+    .adModal{
+      width:min(520px, 92vw);
+      background:#fff;
+      border-radius:22px;
+      border:1px solid rgba(0,0,0,.06);
+      box-shadow: 0 26px 70px rgba(0,0,0,.25);
+      overflow:hidden;
+    }
+    .adTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 14px;
+      background: linear-gradient(135deg, #f7f7fb, #ffffff);
+      border-bottom:1px solid rgba(0,0,0,.06);
+      font-weight:800;
+      font-size:13px;
+      color:#222;
+    }
+    .adTop .pill{
+      font-weight:800;
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,.08);
+      background:#fff;
+      color:#444;
+    }
+    .adBody{
+      padding:16px 16px 14px;
+      color:#1c1c1c;
+    }
+    .adHeadline{
+      font-size:18px;
+      font-weight:900;
+      margin:0 0 6px;
+      letter-spacing:-.2px;
+    }
+    .adCopy{
+      margin:0;
+      font-size:14px;
+      opacity:.9;
+      line-height:1.45;
+    }
+    .adGrid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .adTile{
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:14px;
+      padding:10px;
+      background: #fafafa;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .adCTA{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      padding:12px 14px 14px;
+      border-top:1px solid rgba(0,0,0,.06);
+      background:#fff;
+    }
+    .adBtn{
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:900;
+      border:1px solid rgba(0,0,0,.1);
+      background:#fff;
+      cursor:not-allowed;
+      opacity:.55;
+    }
+    .count{
+      font-size:12px;
+      opacity:.75;
+      margin-right:auto;
+    }
+
+    /* Fake "links" page */
+    .linkList{
+      background:#fff;
+      border:1px solid rgba(0,0,0,.08);
+      border-radius:18px;
+      padding:14px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.08);
+    }
+    .linkList h2{
+      margin:0 0 8px;
+      font-size:16px;
+      letter-spacing:-.2px;
+    }
+    .links{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .links a{
+      display:block;
+      padding:12px 12px;
+      border-radius:14px;
+      background: #f6f6fb;
+      border:1px solid rgba(0,0,0,.06);
+      text-decoration:none;
+      color:#1a1a1a;
+      font-weight:800;
+      font-size:14px;
+    }
+    .links small{
+      display:block;
+      font-weight:700;
+      opacity:.65;
+      margin-top:2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" aria-hidden="true" id="heartsLayer"></div>
+
+  <div class="adOverlay" id="adOverlay" aria-hidden="true">
+    <div class="adModal" role="dialog" aria-modal="true" aria-label="Advertisement">
+      <div class="adTop">
+        <div>Sponsored Content</div>
+        <div class="pill">Ad</div>
+      </div>
+      <div class="adBody">
+        <p class="adHeadline">Limited Offers!</p>
+        <p class="adCopy">You were redirected to a promotion. Please wait while we verify your click. This window closes automatically.</p>
+
+        <div class="adGrid" aria-hidden="true">
+          <div class="adTile"><strong>Deal A</strong><br/>Text me if u want in on a life-changing opportunity. This is not a drill 707-932-4826</div>
+          <div class="adTile"><strong>Deal B</strong><br/>BPI reminds you that your 6,110 points will expire today. Please visit https://www.bpisdcw.icu/cash to redeem your rewards!</div>
+          <div class="adTile"><strong>Deal C</strong><br/>CONGRATULATIONS!!!YOUR # WON TOYOTA AVANZA w/ 300 thou via electronic last Jan.24.2011.For details,please call now MANUEL ACOSTA of Phil. Info. Center on 09297925033</div>
+          <div class="adTile"><strong>Deal D</strong><br/>This is definitely not suspicious.E2 Bgong roaming # ko Msta n kau jan,ako ok nman d2.Spg at tyga lng. Mis ko n kau jan.My ppdala ako ppakage jn.My gift aq sau dun s luob ng pakage.Ingat kau jan. </div>
+        </div>
+      </div>
+      <div class="adCTA">
+        <div class="count" id="count">Closing in 3</div>
+        <button class="adBtn" type="button" aria-disabled="true">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+
+      <div class="screen active" id="scene1">
+        <div class="badge"><span class="dot"></span> Recommended Links</div>
+        <h1>Browse Trending Promotions</h1>
+        <p class="subtitle">Pick one!</p>
+
+        <div class="linkList">
+          <h2>Sponsored Results</h2>
+          <ul class="links">
+            <li>
+              <a href="#" data-adlink="1">
+                Claim reward points instantly
+                <small>redirect.partner-rewards</small>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-adlink="2">
+                Exclusive bundle: limited stock
+                <small>ads.shop-bundles</small>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-adlink="3">
+                Congratulations, you were selected
+                <small>promo.selection-center</small>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="hint">Note: Clicking any link may open a pop-up.</div>
+      </div>
+
+      <div class="screen" id="main">
+        <div class="badge"><span class="dot"></span> Valentine’s Letter</div>
+
+        <h1>Would you want to be my Valentine?</h1>
+        <p class="subtitle"> </p>
+
+        <div class="panel">
+          <p>
+<span class="dearest">Dearest Enzo,</span>
+
+Grade 7 homeroom. Ma’am was presenting something through Zoom, and everyone else was listening the way students are supposed to — or at least pretending to. The movie was playing, and somewhere in the middle of all that, it was just you and me talking.
+
+I remember watching The Book of Life and hearing that song: “I Love You Too Much.” At the time, I don’t think I understood why it stayed with me. It was just a song in a movie we weren’t even supposed to be focused on.
+
+But now I think it wasn’t the song itself. It was that moment.
+
+Because while it was playing, we were talking. And somehow, without either of us deciding it, we stopped being part of the classroom and started being part of something else — something that belonged only to us.
+
+The song talks about knowing where you belong when you sing it. And I think, that was the first time I understood what that meant.
+
+In the simple way where nothing special was happening, and yet it still mattered.
+
+I didn’t know then how much you would mean to me. How something so ordinary would become something I’d carry for years.
+
+So I wanted to ask you something, not because of grand gestures or big declarations, but because of that quiet moment that never really left me.
+
+Will you be my Valentine?
+          </p>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="yesBtn">YES</button>
+          <button class="secondary" id="noBtn">NO</button>
+        </div>
+
+        <div class="hint" id="hint">P.S. The “NO” button is suspicious.</div>
+      </div>
+
+      <div class="screen" id="success">
+        <div class="badge"><span class="dot"></span> Result</div>
+        <h1>YAY</h1>
+        <p class="subtitle">You just made my whole day. Happy Valentine’s, Enzo.</p>
+      </div>
+
+      <div class="footer"> </div>
+    </div>
+  </div>
+
+  <script>
+    // Hearts (created but kept OFF until we enter main)
+    function createHearts(){
+      const layer = document.getElementById('heartsLayer');
+      layer.innerHTML = "";
+      const count = 22;
+      for(let i=0;i<count;i++){
+        const h = document.createElement('div');
+        h.className = 'heart';
+        const size = 10 + Math.random()*18;
+        h.style.width = size+'px';
+        h.style.height = size+'px';
+        h.style.left = (Math.random()*100)+'vw';
+        h.style.animationDuration = (6 + Math.random()*8) + 's';
+        h.style.animationDelay = (-Math.random()*12) + 's';
+        h.style.opacity = (0.18 + Math.random()*0.35).toFixed(2);
+        layer.appendChild(h);
+      }
+    }
+    function heartsOn(){
+      const layer = document.getElementById('heartsLayer');
+      if(!layer.classList.contains('on')){
+        createHearts();
+        layer.classList.add('on');
+      }
+    }
+
+    // Screens
+    const scene1  = document.getElementById('scene1');
+    const main    = document.getElementById('main');
+    const success = document.getElementById('success');
+
+    function showScreen(el){
+      [scene1, main, success].forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Fake ad overlay logic
+    const overlay = document.getElementById('adOverlay');
+    const countEl = document.getElementById('count');
+
+    function openAdThenGoToLetter(){
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden', 'false');
+
+      let t = 3;
+      countEl.textContent = `Closing in ${t}`;
+
+      const timer = setInterval(() => {
+        t -= 1;
+        countEl.textContent = `Closing in ${t}`;
+        if(t <= 0){
+          clearInterval(timer);
+          overlay.classList.remove('show');
+          overlay.setAttribute('aria-hidden', 'true');
+          heartsOn();          // turn hearts ON only now
+          showScreen(main);    // then go to letter
+        }
+      }, 1000);
+    }
+
+    // Link clicks trigger the fake popup + redirect
+    document.querySelectorAll('[data-adlink]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        openAdThenGoToLetter();
+      });
+    });
+
+    // Letter buttons
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn  = document.getElementById('noBtn');
+    const hint   = document.getElementById('hint');
+
+    let noClicks = 0;
+    let yesScale = 1;
+
+    const noPhrases = [
+      "NO",
+      "Wait... no?",
+      "Are you sure?",
+      "Please.",
+      "What if I bring chocolates",
+      "What if I do a backflip",
+      "What if I cry right now",
+      "Bestie, do not do this",
+      "Enzo please, I am begging",
+      "I will write you a love poem",
+      "I will give you my last fry",
+      "I will be sad forever",
+      "Not the NO button again",
+      "Okay stop",
+      "Think about the vibes",
+      "Just press YES already",
+      "NO is illegal actually",
+      "This is emotional damage",
+      "Last chance (not really)",
+      "The YES is right there"
+    ];
+
+    function setNoText(){
+      if(noClicks < noPhrases.length){
+        noBtn.textContent = noPhrases[noClicks];
+        return;
+      }
+      const extra = "PLEASE ".repeat(2 + Math.min(10, Math.floor(noClicks/2))).trim();
+      noBtn.textContent = extra;
+    }
+
+    function pop(el, scale){
+      el.animate(
+        [
+          { transform: `scale(${scale})` },
+          { transform: `scale(${scale + 0.07})` },
+          { transform: `scale(${scale})` }
+        ],
+        { duration: 190, easing: 'ease-out' }
+      );
+    }
+
+    function shakeNo(intensity){
+      const d = 140 + intensity * 18;
+      const x = 4 + intensity * 1.2;
+      noBtn.animate(
+        [
+          { transform:`translateX(0px) rotate(0deg)` },
+          { transform:`translateX(${-x}px) rotate(-1deg)` },
+          { transform:`translateX(${x}px) rotate(1deg)` },
+          { transform:`translateX(0px) rotate(0deg)` }
+        ],
+        { duration: d, easing:'ease-in-out' }
+      );
+    }
+
+    noBtn.addEventListener('click', () => {
+      noClicks++;
+
+      const growth = 0.18 + (noClicks * 0.02);
+      yesScale += growth;
+
+      yesBtn.style.transform = `scale(${yesScale})`;
+      yesBtn.style.boxShadow = `0 18px 34px rgba(255, 47, 119, ${Math.min(0.22 + noClicks*0.06, 0.85)})`;
+
+      setNoText();
+
+      if(noClicks < 3){
+        hint.textContent = "Are you sureeee...";
+      } else if(noClicks < 8){
+        hint.textContent = "The universe is begging you to press YES.";
+      } else if(noClicks < 15){
+        hint.textContent = "At this point the YES button is basically destiny.";
+      } else {
+        hint.textContent = "Okay. I am not asking anymore. It is YES.";
+      }
+
+      pop(yesBtn, yesScale);
+      shakeNo(Math.min(12, noClicks));
+    });
+
+    yesBtn.addEventListener('click', () => {
+      showScreen(success);
+    });
+  </script>
+</body>
+</html>

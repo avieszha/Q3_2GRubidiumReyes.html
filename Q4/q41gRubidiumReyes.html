@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Q4 1st Graded Exercise - Movie List</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #1f2937;
+      background:
+        radial-gradient(circle at top left, #ffd6e8 0%, transparent 30%),
+        radial-gradient(circle at top right, #de8b8b 0%, transparent 28%),
+        radial-gradient(circle at bottom left, #e424a4 0%, transparent 30%),
+        linear-gradient(135deg, #ed3a55 0%, #e4a9da 45%, #d4065f 100%);
+      min-height: 100vh;
+      padding: 30px 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(6px);
+      border-radius: 24px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+      padding: 35px 40px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+    }
+
+    .top-banner {
+      background: linear-gradient(90deg, #d41a51, #ec4899, #017305);
+      color: white;
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 18px rgba(139, 92, 246, 0.25);
+    }
+
+    .top-banner h1 {
+      margin: 0 0 6px;
+      font-size: 2.2rem;
+    }
+
+    .top-banner p {
+      margin: 0;
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    .extra-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .info-pill {
+      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+      color: #374151;
+      border: 1px solid #dbeafe;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      font-weight: bold;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: #111827;
+      font-size: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-size: 1.08rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #1f2937;
+    }
+
+    .helper-text {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      border: 2px solid #d1d5db;
+      border-radius: 12px;
+      outline: none;
+      background: #ffffff;
+      transition: 0.2s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+    }
+
+    .stars {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+      user-select: none;
+      flex-wrap: wrap;
+    }
+
+    .star {
+      font-size: 2.4rem;
+      color: #d1d5db;
+      cursor: pointer;
+      transition: transform 0.15s ease, color 0.15s ease, text-shadow 0.15s ease;
+    }
+
+    .star:hover {
+      transform: scale(1.15) rotate(-4deg);
+    }
+
+    .star.selected {
+      color: #facc15;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.45);
+    }
+
+    .rating-text {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #6b7280;
+      min-height: 20px;
+      font-weight: bold;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px;
+      font-size: 1.05rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+    }
+
+    .btn-secondary {
+      color: #374151;
+      background: linear-gradient(90deg, #f9fafb, #e5e7eb);
+      border: 1px solid #d1d5db;
+    }
+
+    .status-message {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      display: none;
+      font-weight: bold;
+    }
+
+    .status-message.success {
+      display: block;
+      background: #ecfdf5;
+      border: 1px solid #86efac;
+      color: #166534;
+    }
+
+    .status-message.error {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+    }
+
+    .list-header {
+      margin-top: 34px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .list-header h2 {
+      margin: 0;
+      text-align: left;
+    }
+
+    .movie-counter {
+      background: linear-gradient(90deg, #dbeafe, #ede9fe);
+      color: #4338ca;
+      border: 1px solid #c4b5fd;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.1);
+    }
+
+    .movie-list {
+      margin-top: 10px;
+    }
+
+    .movie-item {
+      background: linear-gradient(135deg, #ffffff, #f8fbff);
+      border: 1px solid #dbeafe;
+      border-left: 7px solid #8b5cf6;
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      font-size: 1.04rem;
+      line-height: 1.6;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.08);
+    }
+
+    .movie-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.14);
+    }
+
+    .movie-title {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 6px;
+    }
+
+    .movie-details {
+      color: #374151;
+    }
+
+    .genre-tag {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #fce7f3, #ede9fe);
+      color: #7c3aed;
+      border: 1px solid #ddd6fe;
+    }
+
+    .rating-stars {
+      color: #facc15;
+      font-size: 1.3rem;
+      margin-left: 8px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px rgba(250, 204, 21, 0.28);
+    }
+
+    .empty-message {
+      text-align: center;
+      color: #6b7280;
+      font-style: italic;
+      margin-top: 16px;
+      padding: 24px;
+      border: 2px dashed #c4b5fd;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #faf5ff, #eff6ff);
+    }
+
+    .bonus-panel {
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #fff7ed, #fef3c7);
+      border: 1px solid #fcd34d;
+    }
+
+    .bonus-panel h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #92400e;
+    }
+
+    .bonus-panel ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #78350f;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 24px 20px;
+      }
+
+      .top-banner h1 {
+        font-size: 1.8rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .list-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .star {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+
+      <div class="top-banner">
+        <h1>Movie Library</h1>
+        <p>Quarter 4 - 1st Graded Exercise</p>
+      </div>
+  
+      <div class="extra-info">
+        <div class="info-pill">Click stars to rate</div> 
+        <div class="info-pill">Reads and displays saved movies</div>
+      </div>
+
+      <h2>Add a Movie</h2>
+
+      <form id="movieForm">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" id="title" placeholder="Enter movie title" required />
+          <div class="helper-text">Example: Wicked </div>
+        </div>
+
+        <div class="form-group">
+          <label for="year">Year:</label>
+          <input type="number" id="year" min="1888" max="2100" placeholder="Enter release year" required />
+          <div class="helper-text">Use a valid year only.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="genre">Genre:</label>
+          <select id="genre" required>
+            <option value="Action">Action</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Animation">Animation</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Drama">Drama</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Horror">Horror</option>
+            <option value="Romance">Romance</option>
+            <option value="Science Fiction">Science Fiction</option>
+            <option value="Thriller">Thriller</option>
+          </select>
+          <div class="helper-text">Choose the genre that best matches the movie.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Rating:</label>
+          <div class="stars" id="starContainer">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+          </div>
+          <div class="rating-text" id="ratingText">No rating selected yet.</div>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">Add Movie</button>
+          <button type="button" class="btn btn-secondary" id="clearFormBtn">Clear Form</button>
+        </div>
+
+        <div id="statusMessage" class="status-message"></div>
+      </form>
+
+      <div class="list-header">
+        <h2>Movie List</h2>
+        <div id="movieCounter" class="movie-counter">0 movies saved</div>
+      </div>
+
+      <div id="movieList" class="movie-list"></div>
+
+    </div>
+  </div>
+
+  <script>
+    // Stores the chosen star rating
+    let selectedRating = 0;
+
+    const movieForm = document.getElementById("movieForm");
+    const titleInput = document.getElementById("title");
+    const yearInput = document.getElementById("year");
+    const genreSelect = document.getElementById("genre");
+    const stars = document.querySelectorAll(".star");
+    const movieList = document.getElementById("movieList");
+    const ratingText = document.getElementById("ratingText");
+    const statusMessage = document.getElementById("statusMessage");
+    const movieCounter = document.getElementById("movieCounter");
+    const clearFormBtn = document.getElementById("clearFormBtn");
+
+    // Highlight stars based on selected rating
+    function updateStarDisplay(rating) {
+      stars.forEach((star) => {
+        const starValue = Number(star.dataset.value);
+        if (starValue <= rating) {
+          star.classList.add("selected");
+        } else {
+          star.classList.remove("selected");
+        }
+      });
+
+      if (rating > 0) {
+        ratingText.textContent = `Selected rating: ${rating} star${rating > 1 ? "s" : ""}`;
+      } else {
+        ratingText.textContent = "No rating selected yet.";
+      }
+    }
+
+    function generateRatingStars(rating) {
+      return "★".repeat(rating);
+    }
+
+    function getMoviesFromLocalStorage() {
+      const savedMovies = localStorage.getItem("movies");
+      return savedMovies ? JSON.parse(savedMovies) : [];
+    }
+
+    function saveMoviesToLocalStorage(movies) {
+      localStorage.setItem("movies", JSON.stringify(movies));
+    }
+
+    function showMessage(message, type) {
+      statusMessage.textContent = message;
+      statusMessage.className = "status-message " + type;
+    }
+
+    function clearMessage() {
+      statusMessage.textContent = "";
+      statusMessage.className = "status-message";
+    }
+
+    function updateMovieCounter(count) {
+      movieCounter.textContent = `${count} movie${count !== 1 ? "s" : ""} saved`;
+    }
+
+    function displayMovies() {
+      const movies = getMoviesFromLocalStorage();
+      movieList.innerHTML = "";
+
+      updateMovieCounter(movies.length);
+
+      if (movies.length === 0) {
+        movieList.innerHTML = '<div class="empty-message">No movies added yet. Add your first movie above!</div>';
+        return;
+      }
+
+      movies.forEach((movie) => {
+        const movieItem = document.createElement("div");
+        movieItem.classList.add("movie-item");
+
+        movieItem.innerHTML = `
+          <div class="movie-title">${movie.title} (${movie.year})</div>
+          <div class="movie-details">
+            ${movie.genre}, Rating:
+            <span class="rating-stars">${generateRatingStars(Number(movie.rating))}</span>
+          </div>
+          <div class="genre-tag">${movie.genre}</div>
+        `;
+
+        movieList.appendChild(movieItem);
+      });
+    }
+
+    stars.forEach((star) => {
+      star.addEventListener("click", function () {
+        selectedRating = Number(this.dataset.value);
+        updateStarDisplay(selectedRating);
+        clearMessage();
+      });
+    });
+
+    movieForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const title = titleInput.value.trim();
+      const year = yearInput.value.trim();
+
+      if (title === "") {
+        showMessage("Please enter a movie title.", "error");
+        return;
+      }
+
+      if (year === "") {
+        showMessage("Please enter a movie year.", "error");
+        return;
+      }
+
+      if (selectedRating === 0) {
+        showMessage("Please select a rating.", "error");
+        return;
+      }
+
+      const newMovie = {
+        title: title,
+        year: year,
+        genre: genreSelect.value,
+        rating: String(selectedRating)
+      };
+
+      const movies = getMoviesFromLocalStorage();
+      movies.push(newMovie);
+      saveMoviesToLocalStorage(movies);
+
+      movieForm.reset();
+      selectedRating = 0;
+      updateStarDisplay(selectedRating);
+      displayMovies();
+      showMessage("Movie added successfully!", "success");
+    });
+
+    clearFormBtn.addEventListener("click", function () {
+      movieForm.reset();
+      selectedRating = 0;
+      updateStarDisplay(selectedRating);
+      clearMessage();
+    });
+
+    displayMovies();
+  </script>
+</body>
+</html>
