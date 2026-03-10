@@ -553,12 +553,13 @@
       showMessage("Movie added successfully!", "success");
     });
 
-    clearFormBtn.addEventListener("click", function () {
-      movieForm.reset();
-      selectedRating = 0;
-      updateStarDisplay(selectedRating);
-      clearMessage();
-    });
+ clearFormBtn.addEventListener("click", function () {
+  movieForm.reset();         
+  selectedRating = 0;    
+  updateStarDisplay(0);   
+  ratingText.textContent = "No rating selected yet."; 
+  clearMessage(); 
+});
 
     displayMovies();
   </script>
