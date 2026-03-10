@@ -23,12 +23,14 @@
       padding: 30px 0;
     }
 
+    /* this centers the content */
     .container {
       max-width: 900px;
       margin: 0 auto;
       padding: 20px;
     }
 
+    /* this is the main white card */
     .card {
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(6px);
@@ -38,6 +40,7 @@
       border: 1px solid rgba(255, 255, 255, 0.45);
     }
 
+    /* this styles the top title section */
     .top-banner {
       background: linear-gradient(90deg, #d41a51, #ec4899, #017305);
       color: white;
@@ -58,6 +61,7 @@
       opacity: 0.95;
     }
 
+    /* this holds the extra info pills */
     .extra-info {
       display: flex;
       flex-wrap: wrap;
@@ -65,6 +69,7 @@
       margin-bottom: 24px;
     }
 
+    /* this styles the small pills */
     .info-pill {
       background: linear-gradient(135deg, #eff6ff, #f5f3ff);
       color: #374151;
@@ -83,6 +88,7 @@
       font-size: 2rem;
     }
 
+    /* this spaces each input section */
     .form-group {
       margin-bottom: 22px;
     }
@@ -95,12 +101,14 @@
       color: #1f2937;
     }
 
+    /* this styles the small helper text */
     .helper-text {
       margin-top: 8px;
       font-size: 0.9rem;
       color: #6b7280;
     }
 
+    /* this styles the inputs */
     input,
     select {
       width: 100%;
@@ -113,12 +121,14 @@
       transition: 0.2s ease;
     }
 
+    /* this adds focus effect */
     input:focus,
     select:focus {
       border-color: #8b5cf6;
       box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
     }
 
+    /* this holds the stars */
     .stars {
       display: flex;
       gap: 10px;
@@ -127,6 +137,7 @@
       flex-wrap: wrap;
     }
 
+    /* this styles the stars */
     .star {
       font-size: 2.4rem;
       color: #d1d5db;
@@ -138,11 +149,13 @@
       transform: scale(1.15) rotate(-4deg);
     }
 
+    /* this makes the selected stars yellow */
     .star.selected {
       color: #facc15;
       text-shadow: 0 0 10px rgba(250, 204, 21, 0.45);
     }
 
+    /* this shows the selected rating text */
     .rating-text {
       margin-top: 10px;
       font-size: 0.95rem;
@@ -151,6 +164,7 @@
       font-weight: bold;
     }
 
+    /* this groups the buttons */
     .button-group {
       display: flex;
       gap: 12px;
@@ -158,6 +172,7 @@
       flex-wrap: wrap;
     }
 
+    /* this styles both buttons */
     .btn {
       flex: 1;
       padding: 15px;
@@ -174,17 +189,20 @@
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
     }
 
+    /* this is the add movie button */
     .btn-primary {
       color: white;
       background: linear-gradient(90deg, #2563eb, #7c3aed);
     }
 
+    /* this is the clear form button */
     .btn-secondary {
       color: #374151;
       background: linear-gradient(90deg, #f9fafb, #e5e7eb);
       border: 1px solid #d1d5db;
     }
 
+    /* this styles the success/error message */
     .status-message {
       margin-top: 18px;
       padding: 12px 14px;
@@ -208,6 +226,7 @@
       color: #991b1b;
     }
 
+    /* this styles the movie list header */
     .list-header {
       margin-top: 34px;
       margin-bottom: 18px;
@@ -223,6 +242,7 @@
       text-align: left;
     }
 
+    /* this styles the movie counter */
     .movie-counter {
       background: linear-gradient(90deg, #dbeafe, #ede9fe);
       color: #4338ca;
@@ -238,6 +258,7 @@
       margin-top: 10px;
     }
 
+    /* this styles each movie card */
     .movie-item {
       background: linear-gradient(135deg, #ffffff, #f8fbff);
       border: 1px solid #dbeafe;
@@ -267,6 +288,7 @@
       color: #374151;
     }
 
+    /* this styles the genre tag */
     .genre-tag {
       display: inline-block;
       margin-top: 10px;
@@ -279,6 +301,7 @@
       border: 1px solid #ddd6fe;
     }
 
+    /* this styles the yellow stars in the list */
     .rating-stars {
       color: #facc15;
       font-size: 1.3rem;
@@ -287,6 +310,7 @@
       text-shadow: 0 0 8px rgba(250, 204, 21, 0.28);
     }
 
+    /* this shows when there are no movies yet */
     .empty-message {
       text-align: center;
       color: #6b7280;
@@ -419,8 +443,10 @@
   </div>
 
   <script>
+    // this stores the selected star rating
     let selectedRating = 0;
 
+    // this gets the form and other elements
     const movieForm = document.getElementById("movieForm");
     const titleInput = document.getElementById("title");
     const yearInput = document.getElementById("year");
@@ -432,6 +458,7 @@
     const movieCounter = document.getElementById("movieCounter");
     const clearFormBtn = document.getElementById("clearFormBtn");
 
+    // this updates the stars and rating text
     function updateStarDisplay(rating) {
       stars.forEach((star) => {
         const starValue = Number(star.dataset.value);
@@ -449,33 +476,40 @@
       }
     }
 
+    // this makes stars for the movie list
     function generateRatingStars(rating) {
       return "★".repeat(rating);
     }
 
+    // this gets the movies from localStorage
     function getMoviesFromLocalStorage() {
       const savedMovies = localStorage.getItem("movies");
       return savedMovies ? JSON.parse(savedMovies) : [];
     }
 
+    // this saves the movies to localStorage
     function saveMoviesToLocalStorage(movies) {
       localStorage.setItem("movies", JSON.stringify(movies));
     }
 
+    // this shows a message
     function showMessage(message, type) {
       statusMessage.textContent = message;
       statusMessage.className = "status-message " + type;
     }
 
+    // this clears the message
     function clearMessage() {
       statusMessage.textContent = "";
       statusMessage.className = "status-message";
     }
 
+    // this updates the movie counter
     function updateMovieCounter(count) {
       movieCounter.textContent = `${count} movie${count !== 1 ? "s" : ""} saved`;
     }
 
+    // this displays all saved movies
     function displayMovies() {
       const movies = getMoviesFromLocalStorage();
       movieList.innerHTML = "";
@@ -504,6 +538,7 @@
       });
     }
 
+    // this lets the user click stars
     stars.forEach((star) => {
       star.addEventListener("click", function () {
         selectedRating = Number(this.dataset.value);
@@ -512,6 +547,7 @@
       });
     });
 
+    // this adds the movie when the form is submitted
     movieForm.addEventListener("submit", function (event) {
       event.preventDefault();
 
@@ -533,6 +569,7 @@
         return;
       }
 
+      // this is the movie object
       const newMovie = {
         title: title,
         year: year,
@@ -544,6 +581,7 @@
       movies.push(newMovie);
       saveMoviesToLocalStorage(movies);
 
+      // this resets the form after adding
       movieForm.reset();
       selectedRating = 0;
       updateStarDisplay(selectedRating);
@@ -551,13 +589,17 @@
       showMessage("Movie added successfully!", "success");
     });
 
- clearFormBtn.addEventListener("click", function () {
-  movieForm.reset();         
-  selectedRating = 0;    
-  updateStarDisplay(0);   
-  ratingText.textContent = "No rating selected yet."; 
-  clearMessage(); 
-});
+    // this clears the form
+    clearFormBtn.addEventListener("click", function () {
+      movieForm.reset();         
+      selectedRating = 0;    
+      updateStarDisplay(0);   
+      ratingText.textContent = "No rating selected yet."; 
+      clearMessage(); 
+    });
+
+    // sir bonus please? maybe the extra design and added elements can count
+    // added movie counter, clear form, helper text, and styled cards
 
     displayMovies();
   </script>
