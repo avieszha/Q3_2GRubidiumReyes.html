@@ -5,366 +5,341 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Q4 1st Graded Exercise - Movie List</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+ <style>
+  * {
+    box-sizing: border-box;
+  }
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #1f2937;
-      background:
-        radial-gradient(circle at top left, #ffd6e8 0%, transparent 30%),
-        radial-gradient(circle at top right, #de8b8b 0%, transparent 28%),
-        radial-gradient(circle at bottom left, #004f22 0%, transparent 30%),
-        linear-gradient(135deg, #ed3a55 0%, #0a2d03 45%, #365f36 100%);
-      min-height: 100vh;
-      padding: 30px 0;
-    }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1f2937;
+    background:
+      radial-gradient(circle at top left, #ffd6e8 0%, transparent 30%),
+      radial-gradient(circle at top right, #de8b8b 0%, transparent 28%),
+      radial-gradient(circle at bottom left, #004f22 0%, transparent 30%),
+      linear-gradient(135deg, #ed3a55 0%, #0a2d03 45%, #365f36 100%);
+    min-height: 100vh;
+    padding: 30px 0;
+  }
 
-    /* this centers the content */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
 
-    /* this is the main white card */
+  .card {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(6px);
+    border-radius: 24px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+    padding: 35px 40px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+  }
+
+  .top-banner {
+    background: linear-gradient(90deg, #d41a51, #ec4899, #017305);
+    color: white;
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 18px rgba(139, 92, 246, 0.25);
+  }
+
+  .top-banner h1 {
+    margin: 0 0 6px;
+    font-size: 2.2rem;
+  }
+
+  .top-banner p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.95;
+  }
+
+  .extra-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .info-pill {
+    background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+    color: #374151;
+    border: 1px solid #dbeafe;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    font-weight: bold;
+  }
+
+  h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: #111827;
+    font-size: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 22px;
+  }
+
+  label {
+    display: block;
+    font-size: 1.08rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1f2937;
+  }
+
+  .helper-text {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #6b7280;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border: 2px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+    background: #ffffff;
+    transition: 0.2s ease;
+  }
+
+  input:focus,
+  select:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+  }
+
+  .stars {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    user-select: none;
+    flex-wrap: wrap;
+  }
+
+  .star {
+    font-size: 2.4rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: transform 0.15s ease, color 0.15s ease, text-shadow 0.15s ease;
+  }
+
+  .star:hover {
+    transform: scale(1.15) rotate(-4deg);
+  }
+
+  .star.selected {
+    color: #facc15;
+    text-shadow: 0 0 10px rgba(250, 204, 21, 0.45);
+  }
+
+  .rating-text {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #6b7280;
+    min-height: 20px;
+    font-weight: bold;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 15px;
+    font-size: 1.05rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  }
+
+  .btn-primary {
+    color: white;
+    background: linear-gradient(90deg, #2563eb, #7c3aed);
+  }
+
+  .btn-secondary {
+    color: #374151;
+    background: linear-gradient(90deg, #f9fafb, #e5e7eb);
+    border: 1px solid #d1d5db;
+  }
+
+  .status-message {
+    margin-top: 18px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    display: none;
+    font-weight: bold;
+  }
+
+  .status-message.success {
+    display: block;
+    background: #ecfdf5;
+    border: 1px solid #86efac;
+    color: #166534;
+  }
+
+  .status-message.error {
+    display: block;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+  }
+
+  .list-header {
+    margin-top: 34px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .list-header h2 {
+    margin: 0;
+    text-align: left;
+  }
+
+  .movie-counter {
+    background: linear-gradient(90deg, #dbeafe, #ede9fe);
+    color: #4338ca;
+    border: 1px solid #c4b5fd;
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.1);
+  }
+
+  .movie-list {
+    margin-top: 10px;
+  }
+
+  .movie-item {
+    background: linear-gradient(135deg, #ffffff, #f8fbff);
+    border: 1px solid #dbeafe;
+    border-left: 7px solid #8b5cf6;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    font-size: 1.04rem;
+    line-height: 1.6;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.08);
+  }
+
+  .movie-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.14);
+  }
+
+  .movie-title {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .movie-details {
+    color: #374151;
+  }
+
+  .genre-tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #fce7f3, #ede9fe);
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
+  }
+
+  .rating-stars {
+    color: #facc15;
+    font-size: 1.3rem;
+    margin-left: 8px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px rgba(250, 204, 21, 0.28);
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    margin-top: 16px;
+    padding: 24px;
+    border: 2px dashed #c4b5fd;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #faf5ff, #eff6ff);
+  }
+
+  /* delete button design */
+  .delete-btn {
+    margin-top: 12px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .delete-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(220, 38, 38, 0.2);
+  }
+
+  @media (max-width: 600px) {
     .card {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(6px);
-      border-radius: 24px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
-      padding: 35px 40px;
-      border: 1px solid rgba(255, 255, 255, 0.45);
-    }
-
-    /* this styles the top title section */
-    .top-banner {
-      background: linear-gradient(90deg, #d41a51, #ec4899, #017305);
-      color: white;
-      border-radius: 18px;
-      padding: 18px 20px;
-      margin-bottom: 25px;
-      box-shadow: 0 8px 18px rgba(139, 92, 246, 0.25);
+      padding: 24px 20px;
     }
 
     .top-banner h1 {
-      margin: 0 0 6px;
-      font-size: 2.2rem;
+      font-size: 1.8rem;
     }
 
-    .top-banner p {
-      margin: 0;
-      font-size: 1rem;
-      opacity: 0.95;
+    .button-group {
+      flex-direction: column;
     }
 
-    /* this holds the extra info pills */
-    .extra-info {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 24px;
+    .list-header {
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    /* this styles the small pills */
-    .info-pill {
-      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
-      color: #374151;
-      border: 1px solid #dbeafe;
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 0.92rem;
-      font-weight: bold;
-    }
-
-    h2 {
-      text-align: center;
-      margin-top: 0;
-      margin-bottom: 24px;
-      color: #111827;
+    .star {
       font-size: 2rem;
     }
+  }
+</style>
 
-    /* this spaces each input section */
-    .form-group {
-      margin-bottom: 22px;
-    }
-
-    label {
-      display: block;
-      font-size: 1.08rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #1f2937;
-    }
-
-    /* this styles the small helper text */
-    .helper-text {
-      margin-top: 8px;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-
-    /* this styles the inputs */
-    input,
-    select {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 1rem;
-      border: 2px solid #d1d5db;
-      border-radius: 12px;
-      outline: none;
-      background: #ffffff;
-      transition: 0.2s ease;
-    }
-
-    /* this adds focus effect */
-    input:focus,
-    select:focus {
-      border-color: #8b5cf6;
-      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
-    }
-
-    /* this holds the stars */
-    .stars {
-      display: flex;
-      gap: 10px;
-      margin-top: 8px;
-      user-select: none;
-      flex-wrap: wrap;
-    }
-
-    /* this styles the stars */
-    .star {
-      font-size: 2.4rem;
-      color: #d1d5db;
-      cursor: pointer;
-      transition: transform 0.15s ease, color 0.15s ease, text-shadow 0.15s ease;
-    }
-
-    .star:hover {
-      transform: scale(1.15) rotate(-4deg);
-    }
-
-    /* this makes the selected stars yellow */
-    .star.selected {
-      color: #facc15;
-      text-shadow: 0 0 10px rgba(250, 204, 21, 0.45);
-    }
-
-    /* this shows the selected rating text */
-    .rating-text {
-      margin-top: 10px;
-      font-size: 0.95rem;
-      color: #6b7280;
-      min-height: 20px;
-      font-weight: bold;
-    }
-
-    /* this groups the buttons */
-    .button-group {
-      display: flex;
-      gap: 12px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    /* this styles both buttons */
-    .btn {
-      flex: 1;
-      padding: 15px;
-      font-size: 1.05rem;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
-    }
-
-    /* this is the add movie button */
-    .btn-primary {
-      color: white;
-      background: linear-gradient(90deg, #2563eb, #7c3aed);
-    }
-
-    /* this is the clear form button */
-    .btn-secondary {
-      color: #374151;
-      background: linear-gradient(90deg, #f9fafb, #e5e7eb);
-      border: 1px solid #d1d5db;
-    }
-
-    /* this styles the success/error message */
-    .status-message {
-      margin-top: 18px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      display: none;
-      font-weight: bold;
-    }
-
-    .status-message.success {
-      display: block;
-      background: #ecfdf5;
-      border: 1px solid #86efac;
-      color: #166534;
-    }
-
-    .status-message.error {
-      display: block;
-      background: #fef2f2;
-      border: 1px solid #fca5a5;
-      color: #991b1b;
-    }
-
-    /* this styles the movie list header */
-    .list-header {
-      margin-top: 34px;
-      margin-bottom: 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .list-header h2 {
-      margin: 0;
-      text-align: left;
-    }
-
-    /* this styles the movie counter */
-    .movie-counter {
-      background: linear-gradient(90deg, #dbeafe, #ede9fe);
-      color: #4338ca;
-      border: 1px solid #c4b5fd;
-      padding: 9px 14px;
-      border-radius: 999px;
-      font-size: 0.92rem;
-      font-weight: bold;
-      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.1);
-    }
-
-    .movie-list {
-      margin-top: 10px;
-    }
-
-    /* this styles each movie card */
-    .movie-item {
-      background: linear-gradient(135deg, #ffffff, #f8fbff);
-      border: 1px solid #dbeafe;
-      border-left: 7px solid #8b5cf6;
-      border-radius: 16px;
-      padding: 16px 18px;
-      margin-bottom: 16px;
-      font-size: 1.04rem;
-      line-height: 1.6;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.08);
-    }
-
-    .movie-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.14);
-    }
-
-    .movie-title {
-      font-size: 1.15rem;
-      font-weight: bold;
-      color: #111827;
-      margin-bottom: 6px;
-    }
-
-    .movie-details {
-      color: #374151;
-    }
-
-    /* this styles the genre tag */
-    .genre-tag {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      background: linear-gradient(90deg, #fce7f3, #ede9fe);
-      color: #7c3aed;
-      border: 1px solid #ddd6fe;
-    }
-
-    /* this styles the yellow stars in the list */
-    .rating-stars {
-      color: #facc15;
-      font-size: 1.3rem;
-      margin-left: 8px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 8px rgba(250, 204, 21, 0.28);
-    }
-
-    /* this shows when there are no movies yet */
-    .empty-message {
-      text-align: center;
-      color: #6b7280;
-      font-style: italic;
-      margin-top: 16px;
-      padding: 24px;
-      border: 2px dashed #c4b5fd;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #faf5ff, #eff6ff);
-    }
-
-    .bonus-panel {
-      margin-top: 28px;
-      padding: 18px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #fff7ed, #fef3c7);
-      border: 1px solid #fcd34d;
-    }
-
-    .bonus-panel h3 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      color: #92400e;
-    }
-
-    .bonus-panel ul {
-      margin: 0;
-      padding-left: 20px;
-      color: #78350f;
-    }
-
-    @media (max-width: 600px) {
-      .card {
-        padding: 24px 20px;
-      }
-
-      .top-banner h1 {
-        font-size: 1.8rem;
-      }
-
-      .button-group {
-        flex-direction: column;
-      }
-
-      .list-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .star {
-        font-size: 2rem;
-      }
-    }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -443,133 +418,173 @@
   </div>
 
   <script>
-    // this stores the selected star rating
-    let selectedRating = 0;
+  // this stores the selected star rating
+  let selectedRating = 0;
 
-    // this gets the form and other elements
-    const movieForm = document.getElementById("movieForm");
-    const titleInput = document.getElementById("title");
-    const yearInput = document.getElementById("year");
-    const genreSelect = document.getElementById("genre");
-    const stars = document.querySelectorAll(".star");
-    const movieList = document.getElementById("movieList");
-    const ratingText = document.getElementById("ratingText");
-    const statusMessage = document.getElementById("statusMessage");
-    const movieCounter = document.getElementById("movieCounter");
-    const clearFormBtn = document.getElementById("clearFormBtn");
+  // this gets the form and other elements
+  const movieForm = document.getElementById("movieForm");
+  const titleInput = document.getElementById("title");
+  const yearInput = document.getElementById("year");
+  const genreSelect = document.getElementById("genre");
+  const stars = document.querySelectorAll(".star");
+  const movieList = document.getElementById("movieList");
+  const ratingText = document.getElementById("ratingText");
+  const statusMessage = document.getElementById("statusMessage");
+  const movieCounter = document.getElementById("movieCounter");
+  const clearFormBtn = document.getElementById("clearFormBtn");
 
-    // this updates the stars and rating text
-    function updateStarDisplay(rating) {
-      stars.forEach((star) => {
-        const starValue = Number(star.dataset.value);
-        if (starValue <= rating) {
-          star.classList.add("selected");
-        } else {
-          star.classList.remove("selected");
-        }
-      });
-
-      if (rating > 0) {
-        ratingText.textContent = `Selected rating: ${rating} star${rating > 1 ? "s" : ""}`;
-      } else {
-        ratingText.textContent = "No rating selected yet.";
-      }
-    }
-
-    // this makes stars for the movie list
-    function generateRatingStars(rating) {
-      return "★".repeat(rating);
-    }
-
-    // this gets the movies from localStorage
-    function getMoviesFromLocalStorage() {
-      const savedMovies = localStorage.getItem("movies");
-      return savedMovies ? JSON.parse(savedMovies) : [];
-    }
-
-    // this saves the movies to localStorage
-    function saveMoviesToLocalStorage(movies) {
-      localStorage.setItem("movies", JSON.stringify(movies));
-    }
-
-    // this shows a message
-    function showMessage(message, type) {
-      statusMessage.textContent = message;
-      statusMessage.className = "status-message " + type;
-    }
-
-    // this clears the message
-    function clearMessage() {
-      statusMessage.textContent = "";
-      statusMessage.className = "status-message";
-    }
-
-    // this updates the movie counter
-    function updateMovieCounter(count) {
-      movieCounter.textContent = `${count} movie${count !== 1 ? "s" : ""} saved`;
-    }
-
-    // this displays all saved movies
-    function displayMovies() {
-      const movies = getMoviesFromLocalStorage();
-      movieList.innerHTML = "";
-
-      updateMovieCounter(movies.length);
-
-      if (movies.length === 0) {
-        movieList.innerHTML = '<div class="empty-message">No movies added yet. Add your first movie above!</div>';
-        return;
-      }
-
-      movies.forEach((movie) => {
-        const movieItem = document.createElement("div");
-        movieItem.classList.add("movie-item");
-
-        movieItem.innerHTML = `
-          <div class="movie-title">${movie.title} (${movie.year})</div>
-          <div class="movie-details">
-            ${movie.genre}, Rating:
-            <span class="rating-stars">${generateRatingStars(Number(movie.rating))}</span>
-          </div>
-          <div class="genre-tag">${movie.genre}</div>
-        `;
-
-        movieList.appendChild(movieItem);
-      });
-    }
-
-    // this lets the user click stars
+  // this updates the stars and rating text
+  function updateStarDisplay(rating) {
     stars.forEach((star) => {
-      star.addEventListener("click", function () {
-        selectedRating = Number(this.dataset.value);
-        updateStarDisplay(selectedRating);
-        clearMessage();
-      });
+      const starValue = Number(star.dataset.value);
+
+      if (starValue <= rating) {
+        star.classList.add("selected");
+      } else {
+        star.classList.remove("selected");
+      }
     });
 
-    // this adds the movie when the form is submitted
-    movieForm.addEventListener("submit", function (event) {
-      event.preventDefault();
+    if (rating > 0) {
+      ratingText.textContent = `Selected rating: ${rating} star${rating > 1 ? "s" : ""}`;
+    } else {
+      ratingText.textContent = "No rating selected yet.";
+    }
+  }
 
-      const title = titleInput.value.trim();
-      const year = yearInput.value.trim();
+  // this makes stars for the movie list
+  function generateRatingStars(rating) {
+    return "★".repeat(rating);
+  }
 
-      if (title === "") {
-        showMessage("Please enter a movie title.", "error");
-        return;
-      }
+  // this gets the movies from localStorage
+  function getMoviesFromLocalStorage() {
+    const savedMovies = localStorage.getItem("movies");
+    return savedMovies ? JSON.parse(savedMovies) : [];
+  }
 
-      if (year === "") {
-        showMessage("Please enter a movie year.", "error");
-        return;
-      }
+  // this saves the movies to localStorage
+  function saveMoviesToLocalStorage(movies) {
+    localStorage.setItem("movies", JSON.stringify(movies));
+  }
 
-      if (selectedRating === 0) {
-        showMessage("Please select a rating.", "error");
-        return;
-      }
+  // this shows a message
+  function showMessage(message, type) {
+    statusMessage.textContent = message;
+    statusMessage.className = "status-message " + type;
+  }
 
-      // this is the movie object
+  // this clears the message
+  function clearMessage() {
+    statusMessage.textContent = "";
+    statusMessage.className = "status-message";
+  }
+
+  // this updates the movie counter
+  function updateMovieCounter(count) {
+    movieCounter.textContent = `${count} movie${count !== 1 ? "s" : ""} saved`;
+  }
+
+  // this deletes a movie after confirmation
+  function deleteMovie(movieTitle) {
+    const confirmed = confirm("Are you sure you want to delete this movie?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    const movies = getMoviesFromLocalStorage();
+
+    const updatedMovies = movies.filter((movie) => movie.title !== movieTitle);
+
+    saveMoviesToLocalStorage(updatedMovies);
+    displayMovies();
+    showMessage("Movie deleted successfully!", "success");
+  }
+
+  // this displays all saved movies
+  function displayMovies() {
+    const movies = getMoviesFromLocalStorage();
+    movieList.innerHTML = "";
+
+    updateMovieCounter(movies.length);
+
+    if (movies.length === 0) {
+      movieList.innerHTML =
+        '<div class="empty-message">No movies added yet. Add your first movie above!</div>';
+      return;
+    }
+
+    movies.forEach((movie) => {
+      const movieItem = document.createElement("div");
+      movieItem.classList.add("movie-item");
+
+      movieItem.innerHTML = `
+        <div class="movie-title">${movie.title} (${movie.year})</div>
+        <div class="movie-details">
+          ${movie.genre}, Rating:
+          <span class="rating-stars">${generateRatingStars(Number(movie.rating))}</span>
+        </div>
+        <div class="genre-tag">${movie.genre}</div>
+        <button class="delete-btn" onclick="deleteMovie('${movie.title.replace(/'/g, "\\'")}')">Delete</button>
+      `;
+
+      movieList.appendChild(movieItem);
+    });
+  }
+
+  // this lets the user click stars
+  stars.forEach((star) => {
+    star.addEventListener("click", function () {
+      selectedRating = Number(this.dataset.value);
+      updateStarDisplay(selectedRating);
+      clearMessage();
+    });
+  });
+
+  // this adds or updates the movie when the form is submitted
+  movieForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const title = titleInput.value.trim();
+    const year = yearInput.value.trim();
+
+    if (title === "") {
+      showMessage("Please enter a movie title.", "error");
+      return;
+    }
+
+    if (year === "") {
+      showMessage("Please enter a movie year.", "error");
+      return;
+    }
+
+    if (selectedRating === 0) {
+      showMessage("Please select a rating.", "error");
+      return;
+    }
+
+    const movies = getMoviesFromLocalStorage();
+
+    // this checks if the movie title already exists
+    const existingMovieIndex = movies.findIndex(
+      (movie) => movie.title.toLowerCase() === title.toLowerCase()
+    );
+
+    if (existingMovieIndex !== -1) {
+      // this updates the movie info and averages the rating
+      const oldRating = Number(movies[existingMovieIndex].rating);
+      const newAverageRating = Math.round((oldRating + selectedRating) / 2);
+
+      movies[existingMovieIndex].title = title;
+      movies[existingMovieIndex].year = year;
+      movies[existingMovieIndex].genre = genreSelect.value;
+      movies[existingMovieIndex].rating = String(newAverageRating);
+
+      saveMoviesToLocalStorage(movies);
+      showMessage("Movie updated successfully!", "success");
+    } else {
+      // this is the new movie object
       const newMovie = {
         title: title,
         year: year,
@@ -577,31 +592,34 @@
         rating: String(selectedRating)
       };
 
-      const movies = getMoviesFromLocalStorage();
       movies.push(newMovie);
       saveMoviesToLocalStorage(movies);
-
-      // this resets the form after adding
-      movieForm.reset();
-      selectedRating = 0;
-      updateStarDisplay(selectedRating);
-      displayMovies();
       showMessage("Movie added successfully!", "success");
-    });
+    }
 
-    // this clears the form
-    clearFormBtn.addEventListener("click", function () {
-      movieForm.reset();         
-      selectedRating = 0;    
-      updateStarDisplay(0);   
-      ratingText.textContent = "No rating selected yet."; 
-      clearMessage(); 
-    });
-
-    // sir bonus please? maybe the extra design and added elements can count
-    // added movie counter, clear form, helper text, and styled cards
-
+    // this resets the form after adding or updating
+    movieForm.reset();
+    selectedRating = 0;
+    updateStarDisplay(0);
+    ratingText.textContent = "No rating selected yet.";
     displayMovies();
-  </script>
+  });
+
+  // this clears the form
+  clearFormBtn.addEventListener("click", function () {
+    movieForm.reset();
+    selectedRating = 0;
+    updateStarDisplay(0);
+    ratingText.textContent = "No rating selected yet.";
+    clearMessage();
+  });
+
+  // sir bonus please? maybe the extra design and added elements can count hehehe
+  // added movie counter, clear form, helper text, and styled cards
+
+  // this shows the movies when the page loads
+  displayMovies();
+
+</script>
 </body>
 </html>
