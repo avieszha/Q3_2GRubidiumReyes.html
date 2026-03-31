@@ -1,5 +1,10 @@
 function plotPoint(x0, y0, x, y) { //uwu fixed
+
     console.log(x0, y0, x, y) // checks the arguments passed to this function
+
+    let in1 = document.getElementById("in1");
+    let out1 = document.getElementById("out1");
+
     in1.innerHTML = x0 + " " + y0 + " " + x + " " + y;
     var point = document.createElement('div');  
     point.className = 'point';

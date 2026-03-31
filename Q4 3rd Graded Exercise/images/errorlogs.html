@@ -229,6 +229,23 @@
     Corrected the image path so the sprite icons in the footer display properly.
   </td>
 </tr>
+
+<tr>
+  <td> 11 </td> 
+  <td> line 8<br/>JS </td> 
+  <td>
+    Using undeclared DOM variables<br/>
+    Before:<br/>
+    in1.innerHTML = ...<br/>
+    out1.innerHTML = ...<br/><br/>
+    After:<br/>
+    let in1 = document.getElementById("in1");<br/>
+    let out1 = document.getElementById("out1");
+  </td>
+  <td>
+    Declared variables using getElementById to properly access DOM elements and avoid relying on implicit global variables.
+  </td>
+</tr>
       
     </table>
     <hr>
