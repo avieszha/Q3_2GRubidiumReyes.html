@@ -54,67 +54,182 @@
         <th> Description</th>
         <th> Correction Done</th>
       </tr>
-      <tr>
-        <td> 1 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 2 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 3 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 4 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 5 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 6 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 7 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 8 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 9 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-      <tr>
-        <td> 10 </td> 
-        <td> </td> 
-        <td> </td>
-        <td> </td>
-      </tr>
-     
+<tr>
+  <td> 1 </td> 
+  <td> line 1<br/>JS </td> 
+  <td>
+    Missing parameters in function<br/>
+    Before:<br/>
+    function plotPoint()<br/>
+    After:<br/>
+    function plotPoint(x0, y0, x, y)
+  </td>
+  <td>
+    Added the needed parameters so the function can receive the input values from the button.
+  </td>
+</tr>
+
+<tr>
+  <td> 2 </td> 
+  <td> line 7<br/>JS </td> 
+  <td>
+    Wrong CSS property (left)<br/>
+    Before:<br/>
+    point.styleleft = ...<br/>
+    After:<br/>
+    point.style.left = ...
+  </td>
+  <td>
+    Corrected the property name so the plotted point can be positioned horizontally.
+  </td>
+</tr>
+
+<tr>
+  <td> 3 </td> 
+  <td> line 8<br/>JS </td> 
+  <td>
+    Wrong CSS property (bottom)<br/>
+    Before:<br/>
+    point.stylebottom = ...<br/>
+    After:<br/>
+    point.style.bottom = ...
+  </td>
+  <td>
+    Corrected the property name so the plotted point can be positioned vertically.
+  </td>
+</tr>
+
+<tr>
+  <td> 4 </td> 
+  <td> line 11<br/>JS </td> 
+  <td>
+    Border logic was incorrect<br/>
+    Before:<br/>
+    else {<br/>
+    &nbsp;&nbsp;out1.innerHTML = "divisa"<br/>
+    }<br/>
+    After:<br/>
+    if (x === x0 || y === y0) {<br/>
+    &nbsp;&nbsp;out1.innerHTML = "divisa"<br/>
+    }
+  </td>
+  <td>
+    Changed the condition so <b>divisa</b> only appears when the point lies exactly on the border lines.
+  </td>
+</tr>
+
+<tr>
+  <td> 5 </td> 
+  <td> line 26<br/>JS </td> 
+  <td>
+    Missing closing brace<br/>
+    Before:<br/>
+    Function not properly closed<br/>
+    After:<br/>
+    Added: }
+  </td>
+  <td>
+    Added the missing closing brace to properly end the function.
+  </td>
+</tr>
+
+<tr>
+  <td> 6 </td> 
+  <td> line 25<br/>CSS </td> 
+  <td>
+    Navigation not fixed at top<br/>
+    Before:<br/>
+    nav {<br/>
+    &nbsp;&nbsp;width: 100%;<br/>
+    &nbsp;&nbsp;background-color: #333;<br/>
+    }<br/>
+    After:<br/>
+    nav {<br/>
+    &nbsp;&nbsp;position: fixed;<br/>
+    &nbsp;&nbsp;top: 0;<br/>
+    &nbsp;&nbsp;left: 0;<br/>
+    &nbsp;&nbsp;width: 100%;<br/>
+    &nbsp;&nbsp;background-color: #333;<br/>
+    }
+  </td>
+  <td>
+    Made the navigation stay at the top of the page while scrolling.
+  </td>
+</tr>
+
+<tr>
+  <td> 7 </td> 
+  <td> line 34<br/>CSS </td> 
+  <td>
+    Navigation links not on one line<br/>
+    Before:<br/>
+    nav a {<br/>
+    &nbsp;&nbsp;display: block;<br/>
+    }<br/>
+    After:<br/>
+    nav a {<br/>
+    &nbsp;&nbsp;display: inline-block;<br/>
+    }
+  </td>
+  <td>
+    Changed the links to display side by side in a single line.
+  </td>
+</tr>
+
+<tr>
+  <td> 8 </td> 
+  <td> line 38<br/>CSS </td> 
+  <td>
+    There is a space between a and :hover<br/>
+    Before:<br/>
+    nav a :hover<br/>
+    After:<br/>
+    nav a:hover
+  </td>
+  <td>
+    Removed the extra space so the hover effect works on the navigation links.
+  </td>
+</tr>
+
+<tr>
+  <td> 9 </td> 
+  <td> line 50<br/>CSS </td> 
+  <td>
+    Missing CSS positioning<br/>
+    Before:<br/>
+    .point {<br/>
+    &nbsp;&nbsp;height: 10px;<br/>
+    &nbsp;&nbsp;width: 10px;<br/>
+    &nbsp;&nbsp;background-color: red;<br/>
+    }<br/>
+    After:<br/>
+    .point {<br/>
+    &nbsp;&nbsp;position: absolute;<br/>
+    &nbsp;&nbsp;height: 10px;<br/>
+    &nbsp;&nbsp;width: 10px;<br/>
+    &nbsp;&nbsp;background-color: red;<br/>
+    }
+  </td>
+  <td>
+    Added absolute positioning so the point follows the left and bottom values set by JavaScript.
+  </td>
+</tr>
+
+<tr>
+  <td> 10 </td> 
+  <td> line 95<br/>CSS </td> 
+  <td>
+    Wrong image path for sprite<br/>
+    Before:<br/>
+    background: url('sprites.png') no-repeat;<br/>
+    After:<br/>
+    background: url('images/sprites.png') no-repeat;
+  </td>
+  <td>
+    Corrected the image path so the sprite icons in the footer display properly.
+  </td>
+</tr>
+      
     </table>
     <hr>
   </section>
